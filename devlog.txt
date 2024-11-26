@@ -10,3 +10,7 @@ benR -- 2024-11-25 20:02
 tyang --2024-11-26 11:30
 - Made API keys for spoonful and Unsplashed
 - Updated design doc
+
+benR -- 2024-11-26 11:41
+- Added keys directory with each API key inside a txt document file
+- Prepped group for coding
