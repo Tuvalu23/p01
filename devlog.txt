@@ -6,3 +6,7 @@ benR -- 2024-11-25 20:02
     - Uploaded flag.jpg as our team flag
     - Added devlog.txt for tracking project updates
     - Added app/__init__.py to initialize the app module
+    
+benR -- 2024-11-26 11:38
+* Added keys directory
+     - Added key files for all three of our APIs: Unsplash, Calendarific, and Spoonacular
