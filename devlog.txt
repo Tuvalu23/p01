@@ -6,3 +6,6 @@ benR -- 2024-11-25 20:02
     - Uploaded flag.jpg as our team flag
     - Added devlog.txt for tracking project updates
     - Added app/__init__.py to initialize the app module
+tyang --2024-11-26 11:30
+- Made API keys for spoonful and Unsplashed
+- Updated design doc
