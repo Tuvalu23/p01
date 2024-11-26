@@ -1,0 +1,8 @@
+benR -- 2024-11-25 20:02
+* Repo submodule linked
+    - Added p01 as a submodule under 5/Bareustoph__benjaminr143_tiffanyy31_timn3_endriti2
+* Completed repo structure
+    - Created directories: app, static, templates, keys
+    - Uploaded flag.jpg as our team flag
+    - Added devlog.txt for tracking project updates
+    - Added app/__init__.py to initialize the app module
