@@ -1,38 +1,70 @@
-# P01 - ArRESTed Development by Team Bareustoph (bah-reh-us-tofh)
+# P01 - ArRESTed Development - Global Bites
+
+**Team Bareustoph** (bah-reh-us-tofh)  
 Ben Rudinski, Tiffany Yang, Tim Ng, Endirt Idrizi
 
+## Roster with Roles
 
-(Placeholder) Description of website/app (a la abstract of a scientific paper... NOT your entire design doc!)
+- **Ben Rudinski**  
+  Button-Mashing, Feature-Wrangling, and Making Sure Everything Actually Works
 
-    
+- **Tiffany Yang**  
+  Database Whisperer (and Chief Leak Plugger)
 
-# Install Guide:
+- **Endrit Idrizi**  
+  CSS Sorcery and Stylin' Shenanigans
 
-1. Clone the repository by running `git clone git@github.com:Vianne-a1/anything.git` or `git clone https://github.com/Vianne-a1/anything.git` in the terminal.
-2. Naviagte to the directory by running `cd anything` in the terminal.
-3. Install everything in requirements.txt by running `pip install -r requirements.txt` in the terminal.
+- **Tim Ng**  
+  Flask Mastery (a.k.a. Server Wizardry)
 
-Or
+---
 
-1. Download the zip file and extract it to folder.
-2. Launch the terminal and and navigate to the extracted files by running `cd anything` in the terminal.
-3. Run `pip install -r requirements.txt` in the terminal.
+## Description
 
-Launch Codes:
+**Global Bites** is an interactive website that showcases traditional recipes for global holidays. Users can explore holidays worldwide, find associated recipes, and view high-quality food images for inspiration. The site features an interactive world map where users can click on countries to discover popular holidays, traditional dishes, cultural customs, and fun facts. Users can also create accounts to save favorite recipes, share experiences, and engage with a community of global food enthusiasts.
 
-Make a python virtual environment
+---  
 
-    1. Launch your device's terminal
+## Install Guide [w.i.p]
 
-    2. Run $ python3 -m venv {path name}
+### Prerequisites
+Ensure you have the following installed on your system:
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- [Python 3](https://www.python.org/downloads/)
 
-    3. Run $ . {path name}/bin/activate
+It's recommended to run this project in a virtual environment to avoid any potential conflicts with other packages. Obviously this doesn't apply to you Topher, but if your less advanced, refer to [this guide](https://novillo-cs.github.io/apcsa/tools/).
 
-    4. Run $ deactivate to deactivate the virtual environment
+### Steps to Install and Run
+1. Clone and move into this repository
+```
+$ git clone git@github.com:Tuvalu23/p01.git
+```
+```
+$ cd p01
+```
+3. Create a virtual environment
+```
+$ python3 -m venv foo
+```
 
-1. Navigate to the directory by running `cd anything`
-   - If requirements are not installed yet, run `pip install -r requirements.txt`
-2. Run `cd/app`
-3. Run `python3 build_db.py`.
-4. Run `python3 '__init__.py'`.
-5. Head to "http://127.0.0.1:5000" or your local host url to view site.
+4. Activate the virtual environment: Linux/MacOS
+```
+$ . foo/bin/activate
+```
+4. Activate the virtual environment: Windows
+```
+$ foo\Scripts\activate
+```
+5. Install required packages
+```
+$ pip install -r requirements.txt
+```
+## Launch Codes: [w.i.p]
+1. Run the database setup file
+``` 
+$ python __init.py__
+```
+
+2. Access the Application: Open your browser and go to http://127.0.0.1:5000 or click the link that appears in your terminal output.
+To stop the app, press CTRL + C
+

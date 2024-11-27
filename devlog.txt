@@ -14,3 +14,7 @@ tyang --2024-11-26 11:30
 benR -- 2024-11-26 11:47
 - Added keys directory with each API key inside a txt document file
 - Began to code __init__.py with basic imports, session handling, initialization of flask app, and config
+
+benR -- 2024-11-26 19:21
+- Updated devlog and added devlog.pdf to p01 repository
+- Updated readme.md with a complete roster and roles, project description, and improved launch codes
