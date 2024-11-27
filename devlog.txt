@@ -18,3 +18,9 @@ benR -- 2024-11-26 11:47
 benR -- 2024-11-26 19:21
 - Updated devlog and added devlog.pdf to p01 repository
 - Updated readme.md with a complete roster and roles, project description, and improved launch codes
+
+benR -- 2024-11-26 20:10
+* Worked on __init__.py
+	- Added imports and removed config to separate file
+* Added Config.py
+	- Reads all API keys and sets up site secret key, as well as setup database
