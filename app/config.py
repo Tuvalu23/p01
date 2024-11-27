@@ -1,3 +1,11 @@
+'''
+Bareustoph: Ben Rudinski, Tiffany Yang, Endrit Idrizi, Tim Ng
+SoftDev
+P01: ArRESTed Development
+2024-11-26
+Time Spent: .7
+'''
+
 import os
 
 class Config:
@@ -21,6 +29,7 @@ class Config:
     CALENDARIFIC_API_KEY = read_key('key_calendarific.txt')
     SPOONACULAR_API_KEY = read_key('key_spoonacular.txt')
     UNSPLASH_API_KEY = read_key('key_unsplash.txt')
+    GOOGLEMAPS_API_KEY = read_key('key_googlemaps.txt')
     # GOOGLE_MAPS_KEY = read_key('key_googlemaps.txt') (still have to get)
 
      # db config
