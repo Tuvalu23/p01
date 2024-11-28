@@ -2,8 +2,14 @@
 {% block title %}Home - Global Bites{% endblock %}
 {% block content %}
 <div class="mt-8">
+    <!-- search bar -->
+     <div class="flex justify-center mb-6">
+        <input type="text" placeholder="Search for recipes, countries, or regions..." class="w-2/3 p-3 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button class="bg-blue-500 text-white px-6 rounded-r-lg hover:bg-blue-600 transition">Search</button>
+     </div>
+
     <!-- google map -->
-     <div id="map" class="w-full h-96"></div>
+     <div id="map" class="w-full h-96 rounded-lg shadow-lg"></div>
 </div>
 
 <script>
@@ -35,8 +41,8 @@
             });
 
             // info window when marker is clicked
-            var infoWinder = new google.maps.InfoWindow({
-                content: '<h3>' + region.name + '</h3><p>Click to explore recipes from this region!</p>'
+            var infoWindow = new google.maps.InfoWindow({
+                content: '<h3 class="text-xl font-bold">' + region.name + '</h3><p>Click to explore recipes from this region.</p>'
             });
 
             // checks if imarkeris clicked
