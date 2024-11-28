@@ -1,0 +1,16 @@
+# byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# keys and secrets (NOONE CAN SEE)
+app/keys/
+
+# environment variables
+.env
+
+# SQLite database
+app/site.db
+
+# virtual environment
+venv/

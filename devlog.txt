@@ -29,3 +29,7 @@ benR -- 2024-11-26 22:55
 	- Reads all API keys and sets up site secret key, as well as setup database
 * Updated design doc in repo
 * Created and added GoogleMaps API key
+
+benR -- 2024-11-27 23:01
+* Added .gitignore to protect keys and store other important information
+* Added jinja requirement
