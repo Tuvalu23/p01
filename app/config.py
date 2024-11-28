@@ -1,9 +1,9 @@
 '''
-P01 - ArRESTed Development - Global Bites
-Team Bareustoph
-Members: Ben Rudinski, Tiffany Yang, Tim Ng, Endrit Idrizi
+Team Bareustoph: Ben Rudinski, Tiffany Yang, Endrit Idrizi, Tim Ng
 SoftDev
-TARGET SHIP DATE: 2024-12-15
+P01: ArRESTed Development - Global Bites
+2024-11-27
+Time Spent: 0.5
 '''
 
 import os
@@ -14,11 +14,11 @@ def read_key(keys_dir, file_name):
         with open(key_path, 'r') as key_file:
             return key_file.read().strip()
     except FileNotFoundError:
-        print(f"Oh no! {file_name} not found in {keys_dir}.")  # Error message if not found
+        print(f"Oh no! {file_name} not found in {keys_dir}.")  # displays error message if not found
         return None
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'your_secret_key_here'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'TopherSecret' # we might change later
 
     # keys directory
     KEYS_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'keys')
