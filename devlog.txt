@@ -33,3 +33,5 @@ benR -- 2024-11-26 22:55
 benR -- 2024-11-27 23:01
 * Added .gitignore to protect keys and store other important information
 * Added jinja requirement
+* Added setup_db.py and other base documents
+	- Including routes, models, etc

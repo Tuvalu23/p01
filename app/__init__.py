@@ -1,21 +1,20 @@
 '''
-Bareustoph: Ben Rudinski, Tiffany Yang, Endrit Idrizi, Tim Ng
+P01 - ArRESTed Development - Global Bites
+Team Bareustoph
+Members: Ben Rudinski, Tiffany Yang, Tim Ng, Endrit Idrizi
 SoftDev
-P01: ArRESTed Development
-2024-11-26
-Time Spent: .5
+TARGET SHIP DATE: 2024-12-15
 '''
 
-#imports
 from flask import Flask
 from .config import Config
-    
-# flask app
+
+# Initialize the Flask app
 app = Flask(__name__)
 app.config.from_object(Config)
 
-from . import routes 
+# Import routes
+from . import routes
 
 if __name__ == "__main__":
     app.run(debug=True)
-    
