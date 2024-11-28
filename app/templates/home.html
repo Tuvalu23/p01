@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Home - Global Bites{% endblock %}
+{% block content %}
+<div class="mt-8">
+    <!-- google map -->
+     <div id="map" class="w-full h-96"></div>
+</div>
+
+<script>
+    function initMap() {
+        // create map of the world
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 2,
+            center: {lat: 20, lng: 0},
+            mapTypeId: 'terrain'
+        });
+
+        // regions definition with their coords
+        var regions = [
+            {name: 'North America', lat: 54.5260, lng: -105.2551},
+            {name: 'South America', lat: -8.7832, lng: -55.4915},
+            {name: 'Europe', lat: 54.5260, lng: 15.2551},
+            {name: 'Africa', lat: -8.7832, lng: 34.5085},
+            {name: 'Asia', lat: 34.0479, lng: 100.6197},
+            {name: 'Australia', lat: -25.2744, lng: 133.7751},
+            {name: 'Antarctica', lat: -82.8628, lng: 135.0000}
+        ];
+
+        // markets for each regions
+        regions.forEach(function(region) {
+            var marker = new google.maps.Marker({
+                position: {lat: region.lat, lng: region.lng},
+                map: map,
+                title: region.name
+            });
+
+            // info window when marker is clicked
+            var infoWinder = new google.maps.InfoWindow({
+                content: '<h3>' + region.name + '</h3><p>Click to explore recipes from this region!</p>'
+            });
+
+            // checks if imarkeris clicked
+            marker.addListener('click', function() {
+                // here we redirect to region page
+                // for now just alert
+                alert('You clicked on ' + region.name);
+            });
+
+            marker.addListener('mouseover', function() {
+                infoWindow.open(map, marker);
+            });
+
+            marker.addListener('mouseout', function() {
+                infoWindow.close();
+            });
+        });
+    }
+</script>
+<!-- google maps JavaScript API -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
+{% endblock %}

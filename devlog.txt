@@ -35,3 +35,11 @@ benR -- 2024-11-27 23:01
 * Added jinja requirement
 * Added setup_db.py and other base documents
 	- Including routes, models, etc
+	
+benR -- 2024-11-28 00:41
+* Fixed import issues in __init__.py
+	- Removed routes.py and moved route definitions into __init__.py
+* Adjusted project structure to simplify the application entry point
+	- Tested GlobalBites to check proper rendering of the home page with the Google Maps API integrated
+* Updated home.html with basic Tailwind CSS setup and added Google Maps script
+* Ensured API keys are securely stored in keys/ directory and accessed via Config.py.
