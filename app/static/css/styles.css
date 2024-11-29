@@ -83,12 +83,12 @@ body.dark-mode {
 
 /* topher mode */
 body.topher-mode {
-    background-color: #e0f7fa; /* cyan ish lol tophers favorite color */
-    color: #004d40; /* teal */
+    background-color: #1fbcd1; /* cyan ish lol tophers favorite color */
+    color: #987a0e; /* teal */
 }
 
 .navbar.topher-mode, .footer.topher-mode {
-    background-color: #00695c; /* tealish */
+    background-color: #a97b0f; /* tealish */
     color: #ffffff;
 }
 

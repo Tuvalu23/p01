@@ -20,7 +20,7 @@ function setMode(mode) {
 
 // function to save mode on page
 function loadMode() {
-    const savedMode = localStorage.getItem('mode') || 'light';
+    const savedMode = localStorage.getItem('mode') || 'topher'; // topher is default mode man
     setMode(savedMode);
 }
 
