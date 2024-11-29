@@ -22,34 +22,47 @@
         });
 
         // regions definition with their coords
-        var regions = [
-            {name: 'North America', lat: 54.5260, lng: -105.2551},
-            {name: 'South America', lat: -8.7832, lng: -55.4915},
-            {name: 'Europe', lat: 54.5260, lng: 15.2551},
-            {name: 'Africa', lat: -8.7832, lng: 34.5085},
-            {name: 'Asia', lat: 34.0479, lng: 100.6197},
-            {name: 'Australia', lat: -25.2744, lng: 133.7751},
-            {name: 'Antarctica', lat: -82.8628, lng: 135.0000}
+        var countries = [
+            {name: 'Italy', lat: 41.8719, lng: 12.5674},
+            {name: 'France', lat: 46.2276, lng: 2.2137},
+            {name: 'China', lat: 35.8617, lng: 104.1954},
+            {name: 'Japan', lat: 36.2048, lng: 138.2529},
+            {name: 'India', lat: 20.5937, lng: 78.9629},
+            {name: 'Mexico', lat: 23.6345, lng: -102.5528},
+            {name: 'Thailand', lat: 15.8700, lng: 100.9925},
+            {name: 'Spain', lat: 40.4637, lng: -3.7492},
+            {name: 'Greece', lat: 39.0742, lng: 21.8243},
+            {name: 'USA', lat: 37.0902, lng: -95.7129},
+            {name: 'Brazil', lat: -14.2350, lng: -51.9253},
+            {name: 'Vietnam', lat: 14.0583, lng: 108.2772},
+            {name: 'Turkey', lat: 38.9637, lng: 35.2433},
+            {name: 'Germany', lat: 51.1657, lng: 10.4515},
+            {name: 'Morocco', lat: 31.7917, lng: -7.0926},
+            {name: 'South Korea', lat: 35.9078, lng: 127.7669},
+            {name: 'Peru', lat: -9.1899, lng: -75.0152},
+            {name: 'Argentina', lat: -38.4161, lng: -63.6167},
+            {name: 'Nigeria', lat: 9.0820, lng: 8.6753},
+            {name: 'Ethiopia', lat: 9.1450, lng: 40.4897}
         ];
 
         // markets for each regions
-        regions.forEach(function(region) {
+        countries.forEach(function(country) {
             var marker = new google.maps.Marker({
-                position: {lat: region.lat, lng: region.lng},
+                position: {lat: country.lat, lng: country.lng},
                 map: map,
-                title: region.name
+                title: country.name
             });
 
             // info window when marker is clicked
             var infoWindow = new google.maps.InfoWindow({
-                content: '<h3 class="text-xl font-bold">' + region.name + '</h3><p>Click to explore recipes from this region.</p>'
+                content: '<h3 class="text-xl font-bold">' + country.name + '</h3><p>Click to explore recipes from this country.</p>'
             });
 
             // checks if imarkeris clicked
             marker.addListener('click', function() {
                 // here we redirect to region page
                 // for now just alert
-                alert('You clicked on ' + region.name);
+                alert('You clicked on ' + country.name);
             });
 
             marker.addListener('mouseover', function() {

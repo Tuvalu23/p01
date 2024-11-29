@@ -1,0 +1,105 @@
+/* base styles for all users */
+body {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* overriding text colors */
+.gm-style .gm-style-iw {
+    color: #000000; 
+    background-color: #ffffff; 
+    font-size: 14px;
+}
+
+.gm-style .gm-style-iw p,
+.gm-style .gm-style-iw h3 {
+    color: #000000; 
+}
+
+.navbar, .footer {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar a, .footer {
+    transition: color 0.3s;
+}
+
+#modeSwitcherMenu a {
+    color: #000000;
+}
+
+#modeSwitcherMenu a:hover {
+    background-color: #f0f0f0; 
+}
+
+#modeSwitcherBtn {
+    color: #000000; 
+}
+
+/* light mode */
+body.light-mode {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.navbar.light-mode, .footer.light-mode {
+    background-color: #c6c9cb;
+    color: #000000;
+}
+
+.navbar.light-mode a {
+    color: #000000;
+}
+
+.navbar.light-mode a:hover {
+    color: #555555;
+}
+
+.footer.light-mode {
+    color: #000000;
+}
+
+/* dark mode */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.navbar.dark-mode, .footer.dark-mode {
+    background-color: #1f1f1f;
+    color: #ffffff;
+}
+
+.navbar.dark-mode a {
+    color: #ffffff;
+}
+
+.navbar.dark-mode a:hover {
+    color: #bbbbbb;
+}
+
+.footer.dark-mode {
+    color: #ffffff;
+}
+
+/* topher mode */
+body.topher-mode {
+    background-color: #e0f7fa; /* cyan ish lol tophers favorite color */
+    color: #004d40; /* teal */
+}
+
+.navbar.topher-mode, .footer.topher-mode {
+    background-color: #00695c; /* tealish */
+    color: #ffffff;
+}
+
+.navbar.topher-mode a {
+    color: #ffffff;
+}
+
+.navbar.topher-mode a:hover {
+    color: #b2dfdb; /* Lighter teal */
+}
+
+.footer.topher-mode {
+    color: #ffffff;
+}
