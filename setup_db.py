@@ -16,11 +16,12 @@ def setup_database():
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
-                password_hash TEXT NOT NULL
+                password_hash TEXT NOT NULL,
+                recents INTERGER NULL
             )
         ''')
         conn.execute('''
-            CREATE TABLE IF NOT EXISTS blogs (
+            CREATE TABLE IF NOT EXISTS threads (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
                 title TEXT NOT NULL,
