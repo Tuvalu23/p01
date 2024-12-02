@@ -49,3 +49,6 @@ benR -- 2024-11-28 19:20
 	- Dark, light, and Topher modes
 * Created login, profile, and logout routes (not actually fully implemented yet though)
 * Added css styling
+
+tyang --2024-12-02 11:21
+- Updated setup_db.py with code for threads.db
