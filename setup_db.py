@@ -33,3 +33,29 @@ def setup_database():
 
 if __name__ == "__main__":
     setup_database()
+
+
+
+# Users
+# user_id (primary key)
+# username
+# password_hash
+# join_date
+# badges
+# Comments
+# comment_id (primary key)
+# user_id (foreign key) recipe_id (foreign
+# key)
+# text
+# timestamp
+# Recipes
+# recipe_id (primary
+# key)
+# title
+# ingredients
+# instructions
+# cuisine
+# image_url
+# Badges
+# badge_id (primary key) badge_name
+# description icon_url

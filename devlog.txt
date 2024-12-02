@@ -53,3 +53,4 @@ benR -- 2024-11-28 19:20
 tyang --2024-12-02 11:21
 - Updated setup_db.py with code for threads.db
 - Added recents to db
+- Added comments of what else I need to add to DB
