@@ -63,3 +63,10 @@ benR -- 2024-12-02 20:49
 	- Added HTML group assignment
 	- Created a small Legend for component relationships
 	- Clarified "Target Ship Date"
+	
+benR -- 2024-12-02 21:21
+* Added login.html and register.html from old project (kept script)
+* Translated them to extend base.html and use similar tailwind styling (continuing color modes)
+* After popular request, removed "ugly" yellow color from Topher Mode. He would never deserve that..
+* Copied/fixed login/register logic from p00
+* Created basic functions and outline for models.py with User class to start

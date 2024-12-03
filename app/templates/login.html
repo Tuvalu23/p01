@@ -1,36 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Login</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-    </head>
-    <body>
+{% extends "base.html" %}
 
-        <h1>Login</h1>
+{% block title %}Login{% endblock %}
 
-        <!-- flash messages  at the top of the form -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            <div class="flash-messages">
-              {% for category, message in messages %}
-                <div class="flash-message {{ category }}">{{ message }}</div>
-              {% endfor %}
+{% block content %}
+<div class="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 mt-10">
+    <h1 class="text-2xl font-bold text-center mb-6">Login</h1>
+
+    <!-- flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-4">
+          {% for category, message in messages %}
+            <div class="text-sm p-2 mb-2 border rounded text-{{ 'red' if category == 'error' else 'green' }}-700 bg-{{ 'red' if category == 'error' else 'green' }}-100">
+              {{ message }}
             </div>
-          {% endif %}
-        {% endwith %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
 
-        <form method="POST" action="{{ url_for('login') }}">
-			<label for="username">Username:</label>
-			<input type="text" id="username" name="username" required>
-			<label for="password">Password</label>
-			<input type="password" id="password" name="password" required><br>
-			<button type="submit">Login</button>
-		</form>
+    <!-- login -->
+    <form method="POST" action="{{ url_for('login') }}" class="space-y-4">
+        <div>
+            <label for="username" class="block text-gray-700 font-medium">Username</label>
+            <input type="text" id="username" name="username" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 p-2" required>
+        </div>
+        <div>
+            <label for="password" class="block text-gray-700 font-medium">Password</label>
+            <input type="password" id="password" name="password" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 p-2" required>
+        </div>
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">Login</button>
+    </form>
 
-        
-        <p><a href="{{ url_for('register') }}">Create an account</a></p>
-
-    </body>
-</html>
+    <p class="mt-4 text-center">
+        <a href="{{ url_for('register') }}" class="text-blue-500 hover:underline">Create an account</a>
+    </p>
+</div>
+{% endblock %}

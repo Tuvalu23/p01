@@ -14,6 +14,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from config import Config
+from functools import wraps
+from models import User  # import User model from models.py
 
 # flask app initializing
 app = Flask(__name__)
@@ -33,7 +35,7 @@ def login_required(f):
 def home():
     user = None
     if 'user_id' in session:
-        user = user.get(session['user_id'])
+        user = User.get_by_id(session['user_id'])
     #maps api key
     google_maps_api_key = app.config['GOOGLE_MAPS_API_KEY']
     return render_template('home.html', google_maps_api_key=google_maps_api_key)
@@ -45,10 +47,10 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         user = User.get_by_username(username)
-        if user and user.verify_password(user.password, password):
+        if user and user.verify_password(user.password_hash, password):
             session['user_id'] = user.id
             flash("Login successful!", "success")
-            return redirect(url_for('main'))
+            return redirect(url_for('home'))
         else:
             flash("Invalid username or password.", "danger")
     return render_template('login.html')

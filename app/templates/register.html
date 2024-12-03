@@ -1,81 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <style>
-        /* inline css for password and username validation styles */
-        .password-requirements, .username-requirements {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        
-        .password-requirements li, .username-requirements li {
-            margin-bottom: 5px;
-            /* Remove the default red color */
-            /* color: red; */
-        }
-        
-        .valid {
-            color: green;
-        }
-        
-        .invalid {
-            color: red;
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <header>
-        <h1>Register</h1>
-        <div class="login-bar">
-            <a href="{{ url_for('main') }}">Back to Home</a>
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 mt-10">
+    <header class="mb-6">
+        <h1 class="text-2xl font-bold text-center mb-4">Register</h1>
+        <div class="text-center">
+            <a href="{{ url_for('main') }}" class="text-blue-500 hover:underline">Back to Home</a>
         </div>
     </header>
 
-    <!-- flashg Messages -->
+    <!-- flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="flash-messages">
+            <div class="mb-4">
                 {% for category, message in messages %}
-                    <div class="flash-message {{ category }}">{{ message }}</div>
+                    <div class="text-sm p-2 mb-2 border rounded text-{{ 'red' if category == 'error' else 'green' }}-700 bg-{{ 'red' if category == 'error' else 'green' }}-100">
+                        {{ message }}
+                    </div>
                 {% endfor %}
             </div>
         {% endif %}
     {% endwith %}
 
-    <main>
-        <form id="registrationForm" action="{{ url_for('register') }}" method="POST" onsubmit="return validateForm()">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            
-            <!-- Username Requirements -->
-            <ul class="username-requirements">
-                <li id="no-space" data-text="Cannot start with a space" class="valid">&#10004; Cannot start with a space</li>
+    <!-- registration Form -->
+    <form id="registrationForm" action="{{ url_for('register') }}" method="POST" onsubmit="return validateForm()" class="space-y-6">
+        <div>
+            <label for="username" class="block text-gray-700 font-medium">Username:</label>
+            <input type="text" id="username" name="username" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 p-2" required>
+            <!-- username Requirements -->
+            <ul class="username-requirements mt-2 text-sm">
+                <li id="no-space" data-text="Cannot start with a space" class="valid text-green-600">&#10004; Cannot start with a space</li>
             </ul>
+        </div>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+        <div>
+            <label for="password" class="block text-gray-700 font-medium">Password:</label>
+            <input type="password" id="password" name="password" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 p-2" required>
+        </div>
 
-            <label for="confirm_password">Retype Password:</label>
-            <input type="password" id="confirm_password" name="confirm_password" required>
+        <div>
+            <label for="confirm_password" class="block text-gray-700 font-medium">Retype Password:</label>
+            <input type="password" id="confirm_password" name="confirm_password" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 p-2" required>
+        </div>
 
-            <!-- oassword Requirements -->
-            <ul class="password-requirements">
-                <li id="length" data-text="At least 12 characters" class="invalid">&#10008; At least 12 characters</li>
-                <li id="lowercase" data-text="At least one lowercase letter" class="invalid">&#10008; At least one lowercase letter</li>
-                <li id="uppercase" data-text="At least one uppercase letter" class="invalid">&#10008; At least one uppercase letter</li>
-                <li id="number" data-text="At least one number" class="invalid">&#10008; At least one number</li>
-                <li id="match" data-text="Passwords must match" class="invalid">&#10008; Passwords must match</li>
-            </ul>
+        <!-- password Requirements -->
+        <ul class="password-requirements mt-2 text-sm">
+            <li id="length" data-text="At least 12 characters" class="invalid text-red-600">&#10008; At least 12 characters</li>
+            <li id="lowercase" data-text="At least one lowercase letter" class="invalid text-red-600">&#10008; At least one lowercase letter</li>
+            <li id="uppercase" data-text="At least one uppercase letter" class="invalid text-red-600">&#10008; At least one uppercase letter</li>
+            <li id="number" data-text="At least one number" class="invalid text-red-600">&#10008; At least one number</li>
+            <li id="match" data-text="Passwords must match" class="invalid text-red-600">&#10008; Passwords must match</li>
+        </ul>
 
-            <button type="submit">Register</button>
-        </form>
-    </main>
+        <button type="submit" class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">Register</button>
+    </form>
+
+    <p class="mt-4 text-center">
+        <a href="{{ url_for('login') }}" class="text-blue-500 hover:underline">Already have an account? Login</a>
+    </p>
+</div>
 
     <script>
         // function to validate username requirements
@@ -139,6 +124,4 @@
         document.getElementById('password').addEventListener('input', validatePassword);
         document.getElementById('confirm_password').addEventListener('input', validatePassword);
     </script>
-
-</body>
-</html>
+{% endblock %}
