@@ -54,3 +54,12 @@ tyang --2024-12-02 11:21
 - Updated setup_db.py with code for threads.db
 - Added recents to db
 - Added comments of what else I need to add to DB
+
+benR -- 2024-12-02 20:49
+* Updated devlog
+	- Added more "Fleshing Out" and explanation for password hashing
+	- Explained how we are using GoogleMaps API for world map interactive
+	- Added recent_history database
+	- Added HTML group assignment
+	- Created a small Legend for component relationships
+	- Clarified "Target Ship Date"

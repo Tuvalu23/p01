@@ -1,4 +1,4 @@
-# P01 - ArRESTed Development - Global Bites
+# P01 - ArRESTed Development - Global Bites by Team Bareustoph
 
 **Team Bareustoph** (bah-reh-us-tofh)  
 Ben Rudinski, Tiffany Yang, Tim Ng, Endirt Idrizi
