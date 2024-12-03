@@ -10,6 +10,7 @@ Time Spent: 1.2
 import sqlite3
 from hashlib import sha256
 import hmac
+import datetime
 
 class User:
     """model for the user  """
@@ -29,10 +30,11 @@ class User:
         """ create a user with two variables :)"""
         hashed_password = User.hash_password(password)
         badges = ' ' # default value for badges
+        join_date = int(datetime.datetime.now().timestamp()) # make current time join date
         try:
             with sqlite3.connect("thread.db") as conn:
                 cursor = conn.cursor()
-                cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", (username, hashed_password, badges))
+                cursor.execute("INSERT INTO users (username, password_hash, join_date, badges) VALUES (?, ?, ?, ?)", (username, hashed_password, join_date, badges))
                 conn.commit()
         except sqlite3.IntegrityError:
             return False
