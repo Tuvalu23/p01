@@ -3,7 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-
+# keys and secrets (NOONE CAN SEE)
+app/keys/
 
 # environment variables
 .env
