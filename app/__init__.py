@@ -95,16 +95,17 @@ def register():
 def logout():
     session.pop('user_id', None)
     flash("You have been logged out.", 'info')
-    return redirect(url_for('main'))
+    return redirect(url_for('home'))
 
 # profile route
+@login_required
 @app.route('/profile')
 def profile():
     if 'user_id' not in session:
         flash('Please log in to access your profile.', 'warning')
         return redirect(url_for('login'))
-    # placeholder page
-    return render_template('profile.html')
+    user = User.get_by_id(session['user_id'])
+    return render_template('profile.html', user=user)
 
 if __name__ == "__main__":
     app.run(debug=True)

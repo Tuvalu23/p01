@@ -17,7 +17,7 @@ def setup_database():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
                 password_hash TEXT NOT NULL,
-                join_date INTERGER NULL,
+                join_date INTEGER NULL,
                 badges TEXT NOT NULL
 
             )
@@ -26,14 +26,14 @@ def setup_database():
             CREATE TABLE IF NOT EXISTS Comments (
                 comment_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
-                recipie_id INTERGER NOT NULL,
+                recipe_id INTEGER NOT NULL,
                 text TEXT NOT NULL,
-                comment_time INTERGER NULL
+                comment_time INTEGER NULL
             )
         ''')
         conn.execute('''
-            CREATE TABLE IF NOT EXISTS Recipies (
-                recipie_id INTEGER NOT NULL,
+            CREATE TABLE IF NOT EXISTS Recipes (
+                recipe_id INTEGER NOT NULL,
                 title TEXT NOT NULL,
                 ingredients TEXT NOT NULL,
                 instructions TEXT NOT NULL,
@@ -53,9 +53,9 @@ def setup_database():
             CREATE TABLE IF NOT EXISTS RecentHistory(
                 history_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
-                recipie_id INTERGER NOT NULL,
+                recipe_id INTEGER NOT NULL,
                 interaction_type TEXT NOT NULL,
-                comment_time INTERGER NULL
+                comment_time INTEGER NULL
             )
         ''')
     conn.close()

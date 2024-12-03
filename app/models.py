@@ -28,10 +28,11 @@ class User:
     def create(username, password):
         """ create a user with two variables :)"""
         hashed_password = User.hash_password(password)
+        badges = ' ' # default value for badges
         try:
             with sqlite3.connect("thread.db") as conn:
                 cursor = conn.cursor()
-                cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", (username, hashed_password))
+                cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", (username, hashed_password, badges))
                 conn.commit()
         except sqlite3.IntegrityError:
             return False
@@ -58,10 +59,12 @@ class User:
                 return User(*user_data)
             return None
 
-    def __init__(self, id, username, password_hash, recents=None):
+    def __init__(self, id, username, password_hash, join_date, badges, recents=None):
         self.id = id
         self.username = username
         self.password_hash = password_hash
+        self.join_date = join_date
+        self.badges = badges
         self.recents = recents
 
 
