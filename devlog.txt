@@ -74,3 +74,5 @@ benR -- 2024-12-02 21:21
 tiffanyY -- 2024-12-03 11:39
 - Updated setup_db.py with basic DB setup according to updated design documents
 	- May need further updating as we go
+	- __init__.py cannot properly access USER table in database 
+- Updated readme with new launch instrictions
