@@ -76,3 +76,8 @@ tiffanyY -- 2024-12-03 11:39
 	- May need further updating as we go
 	- __init__.py cannot properly access USER table in database 
 - Updated readme with new launch instrictions
+
+benR -- 2024-120-03 11:58
+- Added users class in Models.py with numerous methods including: get_by_id, init, hash_password, etc
+- Used sha256 for password encryption
+- Removed circular import
