@@ -62,9 +62,15 @@ $ pip install -r requirements.txt
 ## Launch Codes: [w.i.p]
 1. Run the database setup file
 ``` 
-$ python __init.py__
+$ python3 setup_DB.py
 ```
-
-2. Access the Application: Open your browser and go to http://127.0.0.1:5000 or click the link that appears in your terminal output.
+2. Locate and run the app file
+``` 
+$ cd app
+```
+``` 
+$ python3 __init__.py
+```
+3. Access the Application: Open your browser and go to http://127.0.0.1:5000 or click the link that appears in your terminal output.
 To stop the app, press CTRL + C
 
