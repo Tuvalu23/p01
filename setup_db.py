@@ -17,51 +17,55 @@ def setup_database():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
                 password_hash TEXT NOT NULL,
-                join_date INTERGER NULL,
+                join_date INTEGER,
                 badges TEXT NOT NULL
-
             )
         ''')
         conn.execute('''
             CREATE TABLE IF NOT EXISTS Comments (
                 comment_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
-                recipie_id INTERGER NOT NULL,
+                recipie_id INTEGER NOT NULL,
                 text TEXT NOT NULL,
-                comment_time INTERGER NULL
+                comment_time INTEGER,
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                FOREIGN KEY (recipie_id) REFERENCES Recipies(recipie_id)
             )
         ''')
         conn.execute('''
             CREATE TABLE IF NOT EXISTS Recipies (
-                recipie_id INTEGER NOT NULL,
+                recipie_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
                 ingredients TEXT NOT NULL,
                 instructions TEXT NOT NULL,
-                cuisine TEXT NULL,
-                image_url TEXT NULL
+                cuisine TEXT,
+                image_url TEXT
             )
         ''')
         conn.execute('''
             CREATE TABLE IF NOT EXISTS Badges (
-                badge_id INTEGER NULL,
+                badge_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 badge_name TEXT NOT NULL,
                 description TEXT NOT NULL,
                 icon_url TEXT NOT NULL
             )
         ''')
         conn.execute('''
-            CREATE TABLE IF NOT EXISTS RecentHistory(
+            CREATE TABLE IF NOT EXISTS RecentHistory (
                 history_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
-                recipie_id INTERGER NOT NULL,
+                recipie_id INTEGER NOT NULL,
                 interaction_type TEXT NOT NULL,
-                comment_time INTERGER NULL
+                comment_time INTEGER,
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                FOREIGN KEY (recipie_id) REFERENCES Recipies(recipie_id)
             )
         ''')
     conn.close()
 
 if __name__ == "__main__":
     setup_database()
+
 
 
 
