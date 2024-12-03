@@ -70,3 +70,7 @@ benR -- 2024-12-02 21:21
 * After popular request, removed "ugly" yellow color from Topher Mode. He would never deserve that..
 * Copied/fixed login/register logic from p00
 * Created basic functions and outline for models.py with User class to start
+
+tiffanyY -- 2024-12-03 11:39
+- Updated setup_db.py with basic DB setup according to updated design documents
+	- May need further updating as we go
