@@ -10,14 +10,20 @@ Time Spent: 1.2
 import sqlite3
 from hashlib import sha256
 import hmac
+import os
 import datetime
 
+# Define the path to the database
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "..",  "thread.db")
+
 class User:
-    """model for the user  """
+    """Model for a user."""
+
     @staticmethod
     def get_by_username(username):
-        """ retrieve user by their usrname """
-        with sqlite3.connect("thread.db") as conn:
+        """Retrieve a user by their username."""
+        with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
             user_data = cursor.fetchone()
@@ -27,33 +33,38 @@ class User:
 
     @staticmethod
     def create(username, password):
-        """ create a user with two variables :)"""
+        """Create a new user with a username and password."""
         hashed_password = User.hash_password(password)
-        badges = ' ' # default value for badges
-        join_date = int(datetime.datetime.now().timestamp()) # make current time join date
+        badges = ''  # Default value for badges
+        join_date = int(datetime.datetime.now().timestamp())  # Current timestamp
         try:
-            with sqlite3.connect("thread.db") as conn:
+            with sqlite3.connect(DB_PATH) as conn:
                 cursor = conn.cursor()
-                cursor.execute("INSERT INTO users (username, password_hash, join_date, badges) VALUES (?, ?, ?, ?)", (username, hashed_password, join_date, badges))
+                cursor.execute(
+                    "INSERT INTO users (username, password_hash, join_date, badges) VALUES (?, ?, ?, ?)",
+                    (username, hashed_password, join_date, badges)
+                )
                 conn.commit()
-        except sqlite3.IntegrityError:
+        except sqlite3.IntegrityError as e:
+            print(f"IntegrityError: {e}")  # Log the error for debugging
             return False
         return True
 
     @staticmethod
     def verify_password(stored_password, provided_password):
-        """ check given password against stored one """
+        """Verify a given password against the stored hash."""
         hashed_provided_password = User.hash_password(provided_password)
         return hmac.compare_digest(stored_password, hashed_provided_password)
-    
+
     @staticmethod
     def hash_password(password):
+        """Hash a password using SHA256."""
         return sha256(password.encode()).hexdigest()
 
     @staticmethod
     def get_by_id(user_id):
-        """ get user by their id """
-        with sqlite3.connect("thread.db") as conn:
+        """Retrieve a user by their ID."""
+        with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
             user_data = cursor.fetchone()
@@ -65,9 +76,9 @@ class User:
         self.id = id
         self.username = username
         self.password_hash = password_hash
-        self.join_date = join_date
-        self.badges = badges
-        self.recents = recents
+        self.join_date = datetime.datetime.fromtimestamp(join_date) if join_date else None
+        self.badges = badges.split(',') if badges else []
+        self.recents = recents or []
 
 
 

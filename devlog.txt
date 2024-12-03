@@ -81,3 +81,8 @@ benR -- 2024-120-03 11:58
 - Added users class in Models.py with numerous methods including: get_by_id, init, hash_password, etc
 - Used sha256 for password encryption
 - Removed circular import
+
+tiffanyY -- 2024 - 12 - 03 18:33
+- Updated models.py to properly link to database
+	- Was previously making a empty db file so there were missing table errors (purple screen of death)
+- Updated setup_db.py 
