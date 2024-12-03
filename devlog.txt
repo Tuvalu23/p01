@@ -7,7 +7,7 @@ benR -- 2024-11-25 20:02
     - Added devlog.txt for tracking project updates
     - Added app/__init__.py to initialize the app module
 
-tyang --2024-11-26 11:30
+tiffanyY --2024-11-26 11:30
 - Made API keys for spoonful and Unsplashed
 - Updated design doc
 
@@ -50,7 +50,7 @@ benR -- 2024-11-28 19:20
 * Created login, profile, and logout routes (not actually fully implemented yet though)
 * Added css styling
 
-tyang --2024-12-02 11:21
+tiffanyY --2024-12-02 11:21
 - Updated setup_db.py with code for threads.db
 - Added recents to db
 - Added comments of what else I need to add to DB
@@ -74,3 +74,10 @@ benR -- 2024-12-02 21:21
 tiffanyY -- 2024-12-03 11:39
 - Updated setup_db.py with basic DB setup according to updated design documents
 	- May need further updating as we go
+	- __init__.py cannot properly access USER table in database 
+- Updated readme with new launch instrictions
+
+benR -- 2024-120-03 11:58
+- Added users class in Models.py with numerous methods including: get_by_id, init, hash_password, etc
+- Used sha256 for password encryption
+- Removed circular import

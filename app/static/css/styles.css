@@ -103,3 +103,12 @@ body.topher-mode {
 .footer.topher-mode {
     color: #ffffff;
 }
+
+/* for register.html */
+.valid {
+    color: green;
+}
+
+.invalid {
+    color: red;
+}
