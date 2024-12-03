@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <style>
+        /* inline css for password and username validation styles */
+        .password-requirements, .username-requirements {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .password-requirements li, .username-requirements li {
+            margin-bottom: 5px;
+            /* Remove the default red color */
+            /* color: red; */
+        }
+        
+        .valid {
+            color: green;
+        }
+        
+        .invalid {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Register</h1>
+        <div class="login-bar">
+            <a href="{{ url_for('main') }}">Back to Home</a>
+        </div>
+    </header>
+
+    <!-- flashg Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <main>
+        <form id="registrationForm" action="{{ url_for('register') }}" method="POST" onsubmit="return validateForm()">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <!-- Username Requirements -->
+            <ul class="username-requirements">
+                <li id="no-space" data-text="Cannot start with a space" class="valid">&#10004; Cannot start with a space</li>
+            </ul>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm_password">Retype Password:</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+
+            <!-- oassword Requirements -->
+            <ul class="password-requirements">
+                <li id="length" data-text="At least 12 characters" class="invalid">&#10008; At least 12 characters</li>
+                <li id="lowercase" data-text="At least one lowercase letter" class="invalid">&#10008; At least one lowercase letter</li>
+                <li id="uppercase" data-text="At least one uppercase letter" class="invalid">&#10008; At least one uppercase letter</li>
+                <li id="number" data-text="At least one number" class="invalid">&#10008; At least one number</li>
+                <li id="match" data-text="Passwords must match" class="invalid">&#10008; Passwords must match</li>
+            </ul>
+
+            <button type="submit">Register</button>
+        </form>
+    </main>
+
+    <script>
+        // function to validate username requirements
+        function validateUsername() {
+            const username = document.getElementById('username').value;
+            const noSpaceRequirement = document.getElementById('no-space');
+
+            // i check if the username starts with a space
+            if (username && username[0] === ' ') {
+                noSpaceRequirement.classList.remove('valid');
+                noSpaceRequirement.classList.add('invalid');
+                noSpaceRequirement.innerHTML = '&#10008; ' + noSpaceRequirement.dataset.text;
+                return false;
+            } else {
+                noSpaceRequirement.classList.remove('invalid');
+                noSpaceRequirement.classList.add('valid');
+                noSpaceRequirement.innerHTML = '&#10004; ' + noSpaceRequirement.dataset.text;
+                return true;
+            }
+        }
+
+        // function to validate password requirements
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            const checks = {
+                length: password.length >= 12,
+                lowercase: /[a-z]/.test(password),
+                uppercase: /[A-Z]/.test(password),
+                number: /[0-9]/.test(password),
+                match: password === confirmPassword && password !== ''
+            };
+
+            for (const [key, value] of Object.entries(checks)) {
+                const element = document.getElementById(key);
+                if (element) {
+                    if (value) {
+                        element.classList.remove('invalid');
+                        element.classList.add('valid');
+                        element.innerHTML = '&#10004; ' + element.dataset.text;
+                    } else {
+                        element.classList.remove('valid');
+                        element.classList.add('invalid');
+                        element.innerHTML = '&#10008; ' + element.dataset.text;
+                    }
+                }
+            }
+        }
+
+        // function to validate the entire form before submission
+        function validateForm() {
+            const usernameValid = validateUsername();
+            const passwordValid = true; // Password will be validated server-side
+
+            return usernameValid && passwordValid;
+        }
+
+        // add event listeners for real-time validation
+        document.getElementById('username').addEventListener('input', validateUsername);
+        document.getElementById('password').addEventListener('input', validatePassword);
+        document.getElementById('confirm_password').addEventListener('input', validatePassword);
+    </script>
+
+</body>
+</html>
