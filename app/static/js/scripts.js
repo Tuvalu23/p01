@@ -2,20 +2,27 @@
 function setMode(mode) {
     // remove existing mode
     document.body.classList.remove('light-mode', 'dark-mode', 'topher-mode');
-
-    // add selected mode
-    document.body.classList.add(mode + '-mode');
-
-    // save
-    localStorage.setItem('mode', mode);
-
-    // update navbar and footer
     const navbar = document.querySelector('.navbar');
     const footer = document.querySelector('.footer');
     navbar.classList.remove('light-mode', 'dark-mode', 'topher-mode');
     footer.classList.remove('light-mode', 'dark-mode', 'topher-mode');
-    navbar.classList.add(mode + '-mode');
-    footer.classList.add(mode + '-mode');
+
+    // add selected mode
+    document.body.classList.add(`${mode}-mode`);
+    navbar.classList.add(`${mode}-mode`);
+    footer.classList.add(`${mode}-mode`);
+
+    // save
+    localStorage.setItem('mode', mode);
+
+    // highlight the current mode in the dropdown menu
+     const modeLinks = document.querySelectorAll('#modeSwitcherMenu a');
+     modeLinks.forEach(link => link.classList.remove('bg-blue-500', 'text-white')); // temove highlight
+     const currentModeLink = document.querySelector(`#modeSwitcherMenu a[onclick="setMode('${mode}')"]`);
+     if (currentModeLink) {
+         currentModeLink.classList.add('bg-blue-500', 'text-white'); // add highlight
+     }
+
 }
 
 // function to save mode on page

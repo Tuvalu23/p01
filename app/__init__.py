@@ -16,6 +16,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from config import Config
 from functools import wraps
 from models import User  # import User model from models.py
+from datetime import datetime
 
 # flask app initializing
 app = Flask(__name__)
@@ -98,14 +99,17 @@ def logout():
     return redirect(url_for('home'))
 
 # profile route
-@login_required
 @app.route('/profile')
+@login_required
 def profile():
-    if 'user_id' not in session:
-        flash('Please log in to access your profile.', 'warning')
-        return redirect(url_for('login'))
     user = User.get_by_id(session['user_id'])
-    return render_template('profile.html', user=user)
+    user_data = {
+        "username": user.username,
+        "join_date": datetime.fromtimestamp(user.join_date).strftime('%B %d, %Y') if user.join_date else "N/A",
+        "badges": user.badges.split(",") if user.badges else [],
+        
+    }
+    return render_template('profile.html', user=user_data)
 
 if __name__ == "__main__":
     app.run(debug=True)

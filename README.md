@@ -74,3 +74,8 @@ $ python3 __init__.py
 3. Access the Application: Open your browser and go to http://127.0.0.1:5000 or click the link that appears in your terminal output.
 To stop the app, press CTRL + C
 
+---
+
+## Future Plans
+- [ ] Improve Profile page with change password, etc
+- [ ] Custom Modes

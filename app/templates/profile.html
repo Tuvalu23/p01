@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 mt-10 border border-gray-300">
+    <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Your Profile</h1>
+
+    <div class="space-y-4">
+        <div>
+            <h2 class="font-medium text-lg text-gray-700">Username:</h2>
+            <p class="text-gray-900">{{ user.username }}</p>
+        </div>
+
+        <div>
+            <h2 class="font-medium text-lg text-gray-700">Join Date:</h2>
+            <p class="text-gray-900">{{ user.join_date }}</p>
+        </div>
+
+        <div>
+            <h2 class="font-medium text-lg text-gray-700">Badges:</h2>
+            {% if user.badges %}
+                <ul class="list-disc ml-6 text-gray-900">
+                    {% for badge in user.badges %}
+                        <li>{{ badge }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-500">No badges earned yet.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="mt-6 text-center">
+        <a href="{{ url_for('logout') }}" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition">
+            Logout
+        </a>
+    </div>
+</div>
+{% endblock %}

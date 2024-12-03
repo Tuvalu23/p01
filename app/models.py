@@ -10,7 +10,7 @@ Time Spent: 1.2
 import sqlite3
 from hashlib import sha256
 import hmac
-import datetime
+from datetime import datetime
 
 class User:
     """model for the user  """

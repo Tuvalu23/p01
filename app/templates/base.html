@@ -23,7 +23,7 @@
                         <button id="modeSwitcherBtn" class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition focus:outline-none">
                             Mode
                         </button>
-                        <div id="modeSwitcherMenu" class="hidden absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-lg">
+                        <div id="modeSwitcherMenu" class="hidden absolute right-0 mt-2 w-32 bg-white border border-gray-400 rounded-lg shadow-lg">
                             <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="setMode('light')">Light</a>
                             <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="setMode('dark')">Dark</a>
                             <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="setMode('topher')">Topher</a>
@@ -32,7 +32,7 @@
                 </li>
 
                 {% if session.get('user_id') %}
-                    <li><a href="#" class="text-green-600 font-semibold hover:text-green-800">Profile</a></li>
+                    <li><a href="{{ url_for('profile') }}" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">Profile</a></li>
                     <li><a href="{{ url_for('logout') }}" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">Logout</a></li>
                 {% else %}
                     <li><a href="{{ url_for('login') }}" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Login</a></li>
