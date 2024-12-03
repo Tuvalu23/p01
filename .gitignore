@@ -11,6 +11,7 @@ app/keys/
 
 # SQLite database
 app/site.db
+thread.db
 
 # virtual environment
 venv/
