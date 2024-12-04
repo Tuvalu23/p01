@@ -14,6 +14,20 @@
         }
         
     </style>
+
+       <!-- flash Messages -->
+       {% with messages = get_flashed_messages(with_categories=true) %}
+       {% if messages %}
+           <div class="mb-4">
+               {% for category, message in messages %}
+                   <div class="text-sm p-2 mb-2 border rounded text-{{ 'red' if category == 'error' else 'green' }}-700 bg-{{ 'red' if category == 'error' else 'green' }}-100">
+                       {{ message }}
+                   </div>
+               {% endfor %}
+           </div>
+       {% endif %}
+   {% endwith %}
+   
     <!-- change password -->
     <section class="mb-8">
         <h2 class="text-xl font-semibold mb-4 text-gray-800">Change Password</h2>

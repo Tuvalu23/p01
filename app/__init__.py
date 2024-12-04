@@ -124,6 +124,11 @@ def settings():
             flash('Current password is incorrect.', 'error')
             return redirect(url_for('settings'))
 
+        #if new pw = current pw
+        if new_password == current_password:
+            flash('New password is the same as the old one.', 'error')
+            return redirect(url_for('settings'))
+
         # validate new password and confirmation
         if new_password != confirm_password:
             flash('New password and confirmation do not match.', 'error')
@@ -151,6 +156,17 @@ def reauthenticate():
             flash("Invalid username or password.", "danger")
     return render_template('reauthenticate.html')
 
+
+@app.route('/recipes/<int:recipe_id>')
+def user_pages(user_id):
+    if 'user_id' not in session:
+        flash("You must be logged in to view user pages.")
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+# need code here
+    conn.close()
+    return render_template('recipes.html', pages=pages)
 
 if __name__ == "__main__":
     app.run(debug=True)
