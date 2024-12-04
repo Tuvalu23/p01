@@ -86,3 +86,5 @@ tiffanyY -- 2024 - 12 - 03 18:33
 - Updated models.py to properly link to database
 	- Was previously making a empty db file so there were missing table errors (purple screen of death)
 - Updated setup_db.py 
+- Made profile.html and updated base.html
+	- Profile page at the moment is just a color picker for a custom theme, not finished
