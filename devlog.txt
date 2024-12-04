@@ -95,9 +95,16 @@ benR -- 2024-12-03 23:10
 - Copied login page for reauthentication page when going from profile -> settings
 - Added change password in settings (that sucked :/)
 
-tiffanyY -- 2024 - 12 - 03 11:10
+tiffanyY -- 2024 - 12 - 04 11:10
 - Added a new error if new pw = current pw
 * Flash shows up on login page instead of on settings page :/
 - Added recipe.html (idk how to spell anymore)
 - Fixed flash showing up on wrong page
 * Have to move down map cause it overlaps with dropdown menu for themes
+
+benR -- 2024-12-04 17:45
+* Fixed the error where text goes white in the light template, manually forced black text
+* Fixed input text for light and topher modes
+* Added country compatibility
+	- Made pop-up's on main page link to country page
+	- Basic template for now

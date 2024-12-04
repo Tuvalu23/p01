@@ -81,10 +81,16 @@ body.dark-mode {
     color: #ffffff;
 }
 
+body.dark-mode input {
+    color: #191c1c; 
+    background-color: #ffffff; /* Match the cyan background */
+    border-color: #000000; /* Optional: accent color for the border */
+}
+
 /* topher mode */
 body.topher-mode {
     background-color: #1fbcd1; /* cyan ish lol tophers favorite color */
-    color: #38b1b5; /* teal */
+    color: #ffffff; /* white */
 }
 
 .navbar.topher-mode, .footer.topher-mode {
@@ -102,6 +108,12 @@ body.topher-mode {
 
 .footer.topher-mode {
     color: #ffffff;
+}
+
+body.topher-mode input {
+    color: #1fbcd1; 
+    background-color: #ffffff; /* Match the cyan background */
+    border-color: #000000; /* Optional: accent color for the border */
 }
 
 /* for register.html */

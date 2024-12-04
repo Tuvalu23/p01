@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ country_name }} - Global Bites{% endblock %}
+
+{% block content %}
+<div class="mt-8">
+    <h1 class="text-3xl font-bold mb-4 text-center">{{ country_name }}</h1>
+
+    <!-- search bar -->
+    <div class="flex justify-center mb-6 mt-6">
+        <input type="text" placeholder="Search for recipes, traditions, etc..." class="w-2/3 p-3 border border-gray-400 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button class="bg-blue-500 border border-gray-400 text-white px-6 rounded-r-lg hover:bg-blue-600 transition">Search</button>
+    </div>
+
+    <!-- recipes -->
+    <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Recipes</h2>
+        {% if recipes %}
+            <!-- show recipes -->
+            {% for recipe in recipes %}
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold">{{ recipe.title }}</h3>
+                    <p>{{ recipe.description }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No recipes available for {{ country_name }}.</p>
+        {% endif %}
+    </section>
+
+    <!-- traditions  -->
+    <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Traditions</h2>
+        {% if traditions %}
+            <!-- show traditions -->
+            {% for tradition in traditions %}
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold">{{ tradition.title }}</h3>
+                    <p>{{ tradition.description }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No traditions available for {{ country_name }}.</p>
+        {% endif %}
+    </section>
+
+    <!-- badges Ssection -->
+    <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Collect Badges</h2>
+        <!-- badge collection logic we need add :(  -->
+        <p>Earn badges by exploring {{ country_name }}!</p>
+        <!-- display -->
+    </section>
+
+    <!-- Fforums -->
+    <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Forums</h2>
+        {% if forums %}
+            <!-- forum threads -->
+            {% for thread in forums %}
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold">{{ thread.title }}</h3>
+                    <p>Started by {{ thread.author }} on {{ thread.date }}</p>
+                    <!--linkto thread here in future -->
+                    <a href="#" class="text-blue-500">View Thread</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No forum discussions available for {{ country_name }}. Be the first to start one!</p>
+        {% endif %}
+        <!-- link to create new-->
+        <a href="#" class="text-blue-500">Start a new discussion</a>
+    </section>
+
+</div>
+{% endblock %}
