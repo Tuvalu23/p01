@@ -71,6 +71,15 @@ class User:
             if user_data:
                 return User(*user_data)
             return None
+        
+    def set_password(self, password):
+        """ hash and update """
+        self.password_hash = self.hash_password(password)
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("UPDATE users SET password_hash = ? WHERE id = ?", (self.password_hash, self.id))
+            conn.commit()
+
 
     def __init__(self, id, username, password_hash, join_date, badges, recents=None):
         self.id = id

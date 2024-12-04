@@ -3,7 +3,7 @@ Team Bareustoph: Ben Rudinski, Tiffany Yang, Endrit Idrizi, Tim Ng
 SoftDev
 P01: ArRESTed Development - Global Bites
 2024-11-27
-Time Spent: 1
+Time Spent: 2
 '''
 
 # imports
@@ -109,13 +109,48 @@ def profile():
 
 # profile settings
 @login_required
-@app.route('/settings')
+@app.route('/settings', methods=['GET', 'POST'])
 def settings():
-    if 'user_id' not in session:
-        flash('Please log in to access your profile settings.', 'warning')
-        return redirect(url_for('login'))
     user = User.get_by_id(session['user_id'])
+    
+    if request.method == 'POST':
+        # get form data
+        current_password = request.form.get('currentPassword')
+        new_password = request.form.get('newPassword')
+        confirm_password = request.form.get('confirmPassword')
+
+        # validate current password
+        if not user.verify_password(user.password_hash, current_password):
+            flash('Current password is incorrect.', 'error')
+            return redirect(url_for('settings'))
+
+        # validate new password and confirmation
+        if new_password != confirm_password:
+            flash('New password and confirmation do not match.', 'error')
+            return redirect(url_for('settings'))
+
+        # update the password securely
+        user.set_password(new_password) 
+        flash('Your password has been successfully updated.', 'success')
+        return redirect(url_for('settings'))
+
     return render_template('settings.html', user=user)
+
+# reauthentication for settings page
+@app.route('/reauthenticate', methods=['GET', 'POST'])
+def reauthenticate():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = User.get_by_username(username)
+        if user and user.verify_password(user.password_hash, password):
+            session['user_id'] = user.id
+            flash("Login successful!", "success")
+            return redirect(url_for('settings'))
+        else:
+            flash("Invalid username or password.", "danger")
+    return render_template('reauthenticate.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)

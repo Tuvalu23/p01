@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Please Login Again{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto bg-white border border-gray-400 shadow-md rounded-lg p-12 mt-10">
+    <h1 class="text-2xl font-bold text-center mb-6 text-red-600">Sensitive Information Access</h1>
+    <p class="text-center text-gray-600 mb-6">
+        To ensure the security of your account and protect sensitive information, please log in again to verify your identity.
+    </p>
+
+    <!-- flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-4">
+          {% for category, message in messages %}
+            <div class="text-sm p-2 mb-2 border rounded text-{{ 'red' if category == 'error' else 'green' }}-700 bg-{{ 'red' if category == 'error' else 'green' }}-100">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- login -->
+    <form method="POST" action="{{ url_for('reauthenticate') }}" class="space-y-4">
+        <div>
+            <label for="username" class="block text-gray-700 font-medium">Username</label>
+            <input type="text" id="username" name="username" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 p-2" required>
+        </div>
+        <div>
+            <label for="password" class="block text-gray-700 font-medium">Password</label>
+            <input type="password" id="password" name="password" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 p-2" required>
+        </div>
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">Verify and Continue</button>
+    </form>
+
+    <p class="mt-4 text-center text-sm text-gray-600">
+        Not you? <a href="{{ url_for('logout') }}" class="text-blue-500 hover:underline">Logout</a> and log in with another account.
+    </p>
+</div>
+{% endblock %}

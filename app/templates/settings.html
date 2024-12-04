@@ -3,55 +3,149 @@
 {% block title %}Profile Settings{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto">
+<div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-8 mt-10 border border-gray-300">
+    <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Advanced Settings</h1>
+    <style>
+        .valid {
+            color: green;
+        }
+        .invalid {
+            color: red;
+        }
+        
+    </style>
+    <!-- change password -->
+    <section class="mb-8">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Change Password</h2>
+        <form id="changePasswordForm" method="POST" action="{{ url_for('settings') }}" onsubmit="return validateForm()" class="space-y-4">
+            <div>
+                <label for="currentPassword" class="block text-gray-700 font-medium">Current Password</label>
+                <input type="password" id="currentPassword" name="currentPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" required>
+            </div>
+            <div>
+                <label for="newPassword" class="block text-gray-700 font-medium">New Password</label>
+                <input type="password" id="newPassword" name="newPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" required>
+            </div>
+            <div>
+                <label for="confirmPassword" class="block text-gray-700 font-medium">Confirm New Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" required>
+            </div>
+            <!-- Password Requirements -->
+            <ul class="password-requirements mt-2 text-sm">
+                <li id="length" data-text="At least 12 characters" class="invalid text-red-600">&#10008; At least 12 characters</li>
+                <li id="lowercase" data-text="At least one lowercase letter" class="invalid text-red-600">&#10008; At least one lowercase letter</li>
+                <li id="uppercase" data-text="At least one uppercase letter" class="invalid text-red-600">&#10008; At least one uppercase letter</li>
+                <li id="number" data-text="At least one number" class="invalid text-red-600">&#10008; At least one number</li>
+                <li id="match" data-text="Passwords must match" class="invalid text-red-600">&#10008; Passwords must match</li>
+            </ul>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Update Password</button>
+        </form>
+    </section>
 
-    <!-- Theme customization -->
+    <!-- colors!!!!! -->
     <section>
-        <h2 class="text-xl font-semibold mb-4">Custom Theme</h2>
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Custom Theme</h2>
         <form id="customThemeForm" class="space-y-4">
             <div>
                 <label for="bgColor" class="block text-sm font-medium text-gray-700">Background Color</label>
-                <input type="color" id="bgColor" name="bgColor" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                <input type="color" id="bgColor" name="bgColor" 
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
             </div>
             <div>
                 <label for="textColor" class="block text-sm font-medium text-gray-700">Text Color</label>
-                <input type="color" id="textColor" name="textColor" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                <input type="color" id="textColor" name="textColor" 
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
             </div>
             <div>
                 <label for="accentColor" class="block text-sm font-medium text-gray-700">Accent Color</label>
-                <input type="color" id="accentColor" name="accentColor" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                <input type="color" id="accentColor" name="accentColor" 
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
             </div>
-            <button type="button" onclick="applyCustomTheme()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+            <button type="button" onclick="applyCustomTheme()" 
+                    class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
                 Apply Theme
             </button>
-            
         </form>
     </section>
+
+    <div class="mt-6 flex justify-center space-x-4">
+        <a href="{{ url_for('profile') }}" 
+           class="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition shadow-md">
+            Back to Profile
+        </a>
+        <a href="{{ url_for('home') }}" 
+           class="bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition shadow-md">
+            Back to Home
+        </a>
+        <a href="{{ url_for('logout') }}" 
+           class="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 transition shadow-md">
+            Logout
+        </a>
+    </div>
 </div>
-<script> function applyCustomTheme() {
-    // Get the color values from the inputs
-    const bgColor = document.getElementById('bgColor').value;
-    const textColor = document.getElementById('textColor').value;
-    const accentColor = document.getElementById('accentColor').value;
 
-    // Apply the custom theme by setting CSS variables
-    document.documentElement.style.setProperty('--bg-color', bgColor);
-    document.documentElement.style.setProperty('--text-color', textColor);
-    document.documentElement.style.setProperty('--accent-color', accentColor);
+<script>
+    function applyCustomTheme() {
+        // Get the color values from the inputs
+        const bgColor = document.getElementById('bgColor').value;
+        const textColor = document.getElementById('textColor').value;
+        const accentColor = document.getElementById('accentColor').value;
 
-    // Save the custom theme to localStorage
-    const theme = { bgColor, textColor, accentColor };
-    localStorage.setItem('customTheme', JSON.stringify(theme));
-}
+        // Apply the custom theme by setting CSS variables
+        document.documentElement.style.setProperty('--bg-color', bgColor);
+        document.documentElement.style.setProperty('--text-color', textColor);
+        document.documentElement.style.setProperty('--accent-color', accentColor);
 
-// Load custom theme on page load
-document.addEventListener('DOMContentLoaded', function () {
-    const savedTheme = JSON.parse(localStorage.getItem('customTheme'));
-    if (savedTheme) {
-        document.documentElement.style.setProperty('--bg-color', savedTheme.bgColor);
-        document.documentElement.style.setProperty('--text-color', savedTheme.textColor);
-        document.documentElement.style.setProperty('--accent-color', savedTheme.accentColor);
+        // Save the custom theme to localStorage
+        const theme = { bgColor, textColor, accentColor };
+        localStorage.setItem('customTheme', JSON.stringify(theme));
     }
-});
+
+    // Load custom theme on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        const savedTheme = JSON.parse(localStorage.getItem('customTheme'));
+        if (savedTheme) {
+            document.documentElement.style.setProperty('--bg-color', savedTheme.bgColor);
+            document.documentElement.style.setProperty('--text-color', savedTheme.textColor);
+            document.documentElement.style.setProperty('--accent-color', savedTheme.accentColor);
+        }
+    });
+
+    function validatePassword() {
+        const password = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        const checks = {
+            length: password.length >= 12,
+            lowercase: /[a-z]/.test(password),
+            uppercase: /[A-Z]/.test(password),
+            number: /[0-9]/.test(password),
+            match: password === confirmPassword && password !== ''
+        };
+
+        for (const [key, value] of Object.entries(checks)) {
+            const element = document.getElementById(key);
+            if (element) {
+                if (value) {
+                    element.classList.remove('invalid');
+                    element.classList.add('valid');
+                    element.innerHTML = '&#10004; ' + element.dataset.text;
+                } else {
+                    element.classList.remove('valid');
+                    element.classList.add('invalid');
+                    element.innerHTML = '&#10008; ' + element.dataset.text;
+                }
+            }
+        }
+    }
+
+    function validateForm() {
+        const passwordValid = document.querySelectorAll('.password-requirements .invalid').length === 0;
+        return passwordValid;
+    }
+
+    // Add event listeners for real-time validation
+    document.getElementById('newPassword').addEventListener('input', validatePassword);
+    document.getElementById('confirmPassword').addEventListener('input', validatePassword);
 </script>
 {% endblock %}

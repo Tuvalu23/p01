@@ -88,3 +88,9 @@ tiffanyY -- 2024 - 12 - 03 18:33
 - Updated setup_db.py 
 - Made profile.html and updated base.html
 	- Profile page at the moment is just a color picker for a custom theme, not finished
+
+benR -- 2024-12-03 23:10
+- Changed tiffany's profile page to profile settings and kept old profile
+- Added buttons at bottom for home, logout, etc
+- Copied login page for reauthentication page when going from profile -> settings
+- Added change password in settings (that sucked :/)
