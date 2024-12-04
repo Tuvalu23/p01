@@ -107,5 +107,15 @@ def profile():
     user = User.get_by_id(session['user_id'])
     return render_template('profile.html', user=user)
 
+# profile settings
+@login_required
+@app.route('/settings')
+def settings():
+    if 'user_id' not in session:
+        flash('Please log in to access your profile settings.', 'warning')
+        return redirect(url_for('login'))
+    user = User.get_by_id(session['user_id'])
+    return render_template('settings.html', user=user)
+
 if __name__ == "__main__":
     app.run(debug=True)

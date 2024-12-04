@@ -3,56 +3,50 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">Profile Settings</h1>
+<div class="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 mt-10 border border-gray-400">
+    <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Your Profile</h1>
 
-    <!-- Theme customization -->
-    <section>
-        <h2 class="text-xl font-semibold mb-4">Custom Theme</h2>
-        <form id="customThemeForm" class="space-y-4">
-            <div>
-                <label for="bgColor" class="block text-sm font-medium text-gray-700">Background Color</label>
-                <input type="color" id="bgColor" name="bgColor" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-            </div>
-            <div>
-                <label for="textColor" class="block text-sm font-medium text-gray-700">Text Color</label>
-                <input type="color" id="textColor" name="textColor" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-            </div>
-            <div>
-                <label for="accentColor" class="block text-sm font-medium text-gray-700">Accent Color</label>
-                <input type="color" id="accentColor" name="accentColor" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-            </div>
-            <button type="button" onclick="applyCustomTheme()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
-                Apply Theme
-            </button>
-            
-        </form>
-    </section>
+    <div class="space-y-4">
+        <div>
+            <h2 class="font-medium text-lg text-gray-700">Username:</h2>
+            <p class="text-gray-900">{{ user.username }}</p>
+        </div>
+
+        <div>
+            <h2 class="font-medium text-lg text-gray-700">Join Date:</h2>
+            <p class="text-gray-900">{{ user.join_date }}</p>
+        </div>
+
+        <div>
+            <h2 class="font-medium text-lg text-gray-700">Badges:</h2>
+            {% if user.badges %}
+                <ul class="list-disc ml-6 text-gray-900">
+                    {% for badge in user.badges %}
+                        <li>{{ badge }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-500">No badges earned yet.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="mt-6 flex justify-center space-x-4">
+        <a href="{{ url_for('settings') }}" 
+           class="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition shadow-md">
+            Profile Settings
+        </a>
+        <a href="{{ url_for('home') }}" 
+           class="bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition shadow-md">
+            Back to Home
+        </a>
+        <a href="{{ url_for('logout') }}" 
+           class="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 transition shadow-md">
+            Logout
+        </a>
+    </div>
+    
+    
 </div>
-<script> function applyCustomTheme() {
-    // Get the color values from the inputs
-    const bgColor = document.getElementById('bgColor').value;
-    const textColor = document.getElementById('textColor').value;
-    const accentColor = document.getElementById('accentColor').value;
-
-    // Apply the custom theme by setting CSS variables
-    document.documentElement.style.setProperty('--bg-color', bgColor);
-    document.documentElement.style.setProperty('--text-color', textColor);
-    document.documentElement.style.setProperty('--accent-color', accentColor);
-
-    // Save the custom theme to localStorage
-    const theme = { bgColor, textColor, accentColor };
-    localStorage.setItem('customTheme', JSON.stringify(theme));
-}
-
-// Load custom theme on page load
-document.addEventListener('DOMContentLoaded', function () {
-    const savedTheme = JSON.parse(localStorage.getItem('customTheme'));
-    if (savedTheme) {
-        document.documentElement.style.setProperty('--bg-color', savedTheme.bgColor);
-        document.documentElement.style.setProperty('--text-color', savedTheme.textColor);
-        document.documentElement.style.setProperty('--accent-color', savedTheme.accentColor);
-    }
-});
-</script>
 {% endblock %}
