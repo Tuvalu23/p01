@@ -60,9 +60,9 @@
 
             // checks if imarkeris clicked
             marker.addListener('click', function() {
-                // here we redirect to region page
-                // for now just alert
-                alert('You clicked on ' + country.name);
+                // encode country name to be url save
+                var encoded = encodeURIComponent(country.name);
+                window.location.href = '/country/' + encoded;
             });
 
             marker.addListener('mouseover', function() {

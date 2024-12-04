@@ -16,6 +16,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from config import Config
 from functools import wraps
 from models import User  # import User model from models.py
+import urllib.parse  # for URL decoding
 
 # flask app initializing
 app = Flask(__name__)
@@ -167,6 +168,27 @@ def user_pages(user_id):
 # need code here
     conn.close()
     return render_template('recipes.html', pages=pages)
+
+# countries
+@app.route('/country/<country_name>')
+def country_page(country_name):
+    # decode country from URL
+    country_name = urllib.parse.unquote(country_name)
+    
+    # here we will fetch data for country
+    # like: (when db is set up and modesl)
+    # recipes = get_recipes_by_country(country_name)
+    # traditions = get_traditions_by_country(country_name)
+    # badges = get_badges_by_country(country_name)
+    # forums = get_forums_by_country(country_name)
+    
+    # placeholders for now
+    recipes = []
+    traditions = []
+    badges = []
+    forums = []
+    
+    return render_template('country.html', country_name=country_name, recipes=recipes, traditions=traditions, badges=badges, forums=forums)
 
 if __name__ == "__main__":
     app.run(debug=True)
