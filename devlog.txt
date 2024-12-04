@@ -99,3 +99,5 @@ tiffanyY -- 2024 - 12 - 03 11:10
 - Added a new error if new pw = current pw
 * Flash shows up on login page instead of on settings page :/
 - Added recipe.html (idk how to spell anymore)
+- Fixed flash showing up on wrong page
+* Have to move down map cause it overlaps with dropdown menu for themes
