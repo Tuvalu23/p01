@@ -5,14 +5,14 @@ body {
 
 /* overriding text colors */
 .gm-style .gm-style-iw {
-    color: #000000; 
-    background-color: #ffffff; 
+    color: #000000;
+    background-color: #ffffff;
     font-size: 14px;
 }
 
 .gm-style .gm-style-iw p,
 .gm-style .gm-style-iw h3 {
-    color: #000000; 
+    color: #000000;
 }
 
 .navbar, .footer {
@@ -28,11 +28,11 @@ body {
 }
 
 #modeSwitcherMenu a:hover {
-    background-color: #f0f0f0; 
+    background-color: #f0f0f0;
 }
 
 #modeSwitcherBtn {
-    color: #000000; 
+    color: #000000;
 }
 
 /* light mode */
@@ -82,19 +82,19 @@ body.dark-mode {
 }
 
 body.dark-mode input {
-    color: #191c1c; 
+    color: #191c1c;
     background-color: #ffffff; /* Match the cyan background */
     border-color: #000000; /* Optional: accent color for the border */
 }
 
 /* topher mode */
 body.topher-mode {
-    background-color: #1fbcd1; /* cyan ish lol tophers favorite color */
+    background-color: #38b1b5; /* cyan ish lol tophers favorite color */
     color: #ffffff; /* white */
 }
 
 .navbar.topher-mode, .footer.topher-mode {
-    background-color: #38b1b5; /* tealish */
+    background-color: #FF5B00; /* tealish */
     color: #ffffff;
 }
 
@@ -111,7 +111,7 @@ body.topher-mode {
 }
 
 body.topher-mode input {
-    color: #1fbcd1; 
+    color: #1fbcd1;
     background-color: #ffffff; /* Match the cyan background */
     border-color: #000000; /* Optional: accent color for the border */
 }
