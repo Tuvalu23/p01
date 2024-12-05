@@ -111,3 +111,6 @@ benR -- 2024-12-04 17:45
 
 endritI -- 2024 - 12 - 05 11:23
 - Fixed topher mode colors
+
+tiffanyY -- 2024 - 12 - 5 11:42
+- Added userinput for cusine to design doc (google doc ver)
