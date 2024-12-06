@@ -131,7 +131,7 @@ timN -- 2024-12-06-04:25
 
 tiffanyY -- 2024 - 12 - 6 11:40
 - Fixed a new login bug (file was moved and code couldn't access database)
-* Limit upvotes/votes to one per account\
+
 !! Working:
 	- Map -> recipies
 	- Login (and lots of sub features)
@@ -143,4 +143,5 @@ tiffanyY -- 2024 - 12 - 6 11:40
 	- Finish other features on design doc
 	- Update design doc
 	- Add a way for users to "disagree"/edit a country/cusine type
+	- Maybe "shopping list" feature
 
