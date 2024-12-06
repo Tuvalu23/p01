@@ -30,6 +30,9 @@ benR -- 2024-11-26 22:55
 * Updated design doc in repo
 * Created and added GoogleMaps API key
 
+timN -- 2024-11-27 02:00
+- Updated Design Doc: with 'WHY TAILWIND?' section
+
 benR -- 2024-11-27 23:01
 * Added .gitignore to protect keys and store other important information
 * Added jinja requirement
@@ -122,6 +125,9 @@ benR -- 2024-12-05-21:47
 * Added routes for various erors like 404 and 500
 * Fixed database bug
 
+timN -- 2024-12-06-04:25
+- Worked on models.py (did not push yet because showcasing app today)
+    - added additional option for Users to change display name 
 
 tiffanyY -- 2024 - 12 - 5 11:42
 - Fixed a new login bug (file was moved and code couldn't access database)
@@ -137,3 +143,4 @@ tiffanyY -- 2024 - 12 - 5 11:42
 	- Finish other features on design doc
 	- Update design doc
 	- Add a way for users to "disagree"/edit a country/cusine type
+
