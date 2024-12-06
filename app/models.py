@@ -15,7 +15,7 @@ import datetime
 
 # Define the path to the database
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "..",  "thread.db")
+DB_PATH = os.path.join(BASE_DIR, "thread.db")
 
 class User:
     """Model for a user."""
