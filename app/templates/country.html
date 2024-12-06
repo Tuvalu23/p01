@@ -25,29 +25,28 @@
             {% if recipe.image %}
             <img src="{{ recipe.image }}" alt="{{ recipe.title }}" class="w-64 h-48 object-cover rounded mb-2">
             {% endif %}
-            <p class="mb-2">Upvotes: <span id="upvotes-{{ recipe.id }}">{{ upvotes }}</span> | Downvotes: <span id="downvotes-{{ recipe.id }}">{{ downvotes }}</span></p>
-    <div class="flex items-center space-x-4">
-        <button 
-            class="vote-button px-4 py-2 rounded hover:bg-blue-600"
-            data-recipe-id="{{ recipe.id }}" 
-            data-country-name="{{ country_name }}" 
-            data-action="upvote"
-            id="upvote-button"
-        >
-            👍 Upvote
-        </button>
-    
-        <button 
-            class="vote-button px-4 py-2 rounded hover:bg-blue-600"
-            data-recipe-id="{{ recipe.id }}" 
-            data-country-name="{{ country_name }}" 
-            data-action="downvote"
-            id="downvote-button"
-        >
-            👎 Downvote
-        </button>
-    </div>
-            
+            <p class="mb-2">Upvotes: <span id="upvotes-{{ recipe.id }}">{{ recipe.upvotes }}</span> | Downvotes: <span id="downvotes-{{ recipe.id }}">{{ recipe.downvotes }}</span></p>
+            <div class="flex items-center space-x-4">
+                <button 
+                    class="vote-button px-4 py-2 rounded hover:bg-blue-600"
+                    data-recipe-id="{{ recipe.id }}" 
+                    data-country-name="{{ country_name }}" 
+                    data-action="upvote"
+                    id="upvote-button-{{ recipe.id }}"
+                >
+                    👍 Upvote
+                </button>
+
+                <button 
+                    class="vote-button px-4 py-2 rounded hover:bg-blue-600"
+                    data-recipe-id="{{ recipe.id }}" 
+                    data-country-name="{{ country_name }}" 
+                    data-action="downvote"
+                    id="downvote-button-{{ recipe.id }}"
+                >
+                    👎 Downvote
+                </button>
+            </div>
             <a href="{{ url_for('recipe_page', country_name=country_name, recipe_id=recipe.id) }}" class="text-blue-500 hover:underline mt-2 block">Read More</a>
         </div>
         {% endfor %}
@@ -101,11 +100,10 @@
 </div>
 
 <script>
-    const currentVote = "{{ current_vote if current_vote else '' }}";
-
-    function updateButtonStyles(vote) {
-        const upvoteButton = document.getElementById("upvote-button");
-        const downvoteButton = document.getElementById("downvote-button");
+    // update button styles for a specific recipe
+    function updateButtonStyles(recipeId, vote) {
+        const upvoteButton = document.getElementById(`upvote-button-${recipeId}`);
+        const downvoteButton = document.getElementById(`downvote-button-${recipeId}`);
         
         // reset styles
         upvoteButton.style.backgroundColor = '';
@@ -113,6 +111,7 @@
         upvoteButton.style.color = '';
         downvoteButton.style.color = '';
 
+        // apply styles based on vote
         if (vote === 'up') {
             upvoteButton.style.backgroundColor = 'green';
             upvoteButton.style.color = 'white';
@@ -123,8 +122,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        updateButtonStyles(currentVote);
-
+        // attach click event listeners to all vote buttons
         document.querySelectorAll(".vote-button").forEach(button => {
             button.addEventListener("click", event => {
                 event.preventDefault();
@@ -148,10 +146,12 @@
                 })
                 .then(data => {
                     if (data.upvotes !== undefined && data.downvotes !== undefined) {
+                        // update vote counts
                         document.querySelector(`#upvotes-${recipeId}`).innerText = data.upvotes;
                         document.querySelector(`#downvotes-${recipeId}`).innerText = data.downvotes;
-                        
-                        updateButtonStyles(data.current_vote);
+
+                        // update button styles for this recipe
+                        updateButtonStyles(recipeId, data.current_vote);
                     }
                 })
                 .catch(error => {
@@ -159,7 +159,7 @@
                 });
             });
         });
-    });      
+    });
     </script>
     
 {% endblock %}
