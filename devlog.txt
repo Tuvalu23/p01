@@ -128,3 +128,20 @@ benR -- 2024-12-05-21:47
 timN -- 2024-12-06-04:25
 - Worked on models.py (did not push yet because showcasing app today)
     - added additional option for Users to change display name 
+=======
+
+tiffanyY -- 2024 - 12 - 5 11:42
+- Fixed a new login bug (file was moved and code couldn't access database)
+* Limit upvotes/votes to one per account\
+!! Working:
+	- Map -> recipies
+	- Login (and lots of sub features)
+
+?? To-Do:
+	- Fix redirects
+	- Add a upvote/downvote limit (1)
+	- Fix custom themes
+	- Finish other features on design doc
+	- Update design doc
+	- Add a way for users to "disagree"/edit a country/cusine type
+
