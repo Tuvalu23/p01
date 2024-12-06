@@ -30,6 +30,9 @@ benR -- 2024-11-26 22:55
 * Updated design doc in repo
 * Created and added GoogleMaps API key
 
+timN -- 2024-11-27 02:00
+- Updated Design Doc: with 'WHY TAILWIND?' section
+
 benR -- 2024-11-27 23:01
 * Added .gitignore to protect keys and store other important information
 * Added jinja requirement
@@ -121,3 +124,7 @@ benR -- 2024-12-05-21:47
 * All recipes will show all of a countries recipies
 * Added routes for various erors like 404 and 500
 * Fixed database bug
+
+timN -- 2024-12-06-04:25
+- Worked on models.py (did not push yet because showcasing app today)
+    - added additional option for Users to change display name 
