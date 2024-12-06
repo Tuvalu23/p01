@@ -397,14 +397,29 @@ def recipe_page(country_name, recipe_id):
     upvotes, downvotes = get_recipe_votes(recipe_id)
     return render_template('recipe.html', country_name=country_name, recipe=recipe_details,upvotes=upvotes,downvotes=downvotes)
 
-@app.route('/country/<country_name>/recipe/<int:recipe_id>/vote')
+@app.route('/country/<country_name>/recipe/<int:recipe_id>/vote', methods=['POST'])
 def vote_recipe(country_name, recipe_id):
     action = request.form.get('action')
+    if not action:
+        return {"error": "No action provided."}, 400
+    
     if action == 'upvote':
         update_recipe_votes(recipe_id, True) # true for upvote
     elif action == 'downvote':
         update_recipe_votes(recipe_id, False) # false for downvote
-    return redirect(url_for('recipe_page', country_name=country_name, recipe_id=recipe_id))
+    else:
+        return {"error": "Invalid action."}, 400
+    upvotes, downvotes = get_recipe_votes(recipe_id)  # fetch updated counts
+    return {"upvotes": upvotes, "downvotes": downvotes}, 200
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True)

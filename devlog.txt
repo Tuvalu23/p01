@@ -114,3 +114,10 @@ endritI -- 2024 - 12 - 05 11:23
 
 tiffanyY -- 2024 - 12 - 5 11:42
 - Added userinput for cusine to design doc (google doc ver)
+
+benR -- 2024-12-05-21:47
+* Created proxies for recipies along with loading them in country.html
+* Created recipe.html which shows the ingredients and instructions
+* All recipes will show all of a countries recipies
+* Added routes for various erors like 404 and 500
+* Fixed database bug
