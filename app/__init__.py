@@ -17,6 +17,8 @@ from config import Config
 from functools import wraps
 from models import User  # import User model from models.py
 import urllib.parse  # for URL decoding
+import sqlite3
+import requests
 
 # flask app initializing
 app = Flask(__name__)
@@ -46,6 +48,15 @@ COUNTRY_INGREDIENT_MAP = {
     "Albania": ["byrek", "feta cheese", "honey"]
 }
 
+# connect to db
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DB_PATH = os.path.join(BASE_DIR, 'thread.db')
+
+def get_db_connection():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -54,6 +65,164 @@ def login_required(f):
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
+
+#recipe stuff
+
+#make sure recipe is in tables if not exist
+def ensure_recipe_in_db(recipe):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT recipie_id FROM Recipies WHERE recipie_id = ?", (recipe['id'],))
+    row = cur.fetchone()
+    
+    if not row:
+        # insert basic info now, instructions can be fetched on recipe detail page if needed
+        cur.execute("""
+            INSERT INTO Recipies (recipie_id, title, image_url)
+            VALUES (?, ?, ?)
+        """, (recipe['id'], recipe['title'], recipe['image']))
+        # also create entry in RecipeVotes sql table
+        cur.execute("""
+            INSERT INTO RecipeVotes (recipie_id) VALUES (?)
+        """, (recipe['id'],))
+        conn.commit()
+    conn.close() # clse our beautiful db
+    
+
+# fetch spoonacular by searching a key ingredient/proxy
+def get_country_recipes(country_name):
+    api_key = app.config['SPOONACULAR_API_KEY']
+    if not api_key:
+        # no key
+        return []
+    
+    ingredient = COUNTRY_INGREDIENT_MAP.get(country_name, country_name)
+    # if none found, use fall back search
+    url = "https://api.spoonacular.com/recipes/complexSearch"
+    params = {
+        'query': ingredient,
+        'number': 10,
+        'apiKey': api_key
+    }
+    try:
+        r = requests.get(url, params=params)
+        data = r.json()
+        if 'results' in data:
+            # results have keys: id, title, image etc.
+            return data['results']
+        else:
+            return []
+    except:
+        # if fail
+        return []
+    
+# detailed recipe info
+def get_recipe_details(recipe_id):
+    api_key = app.config['SPOONACULAR_API_KEY']
+    
+    if not api_key:
+        # fallback: just return from DB if we have it
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM Recipies WHERE recipie_id = ?", (recipe_id,))
+        row = cur.fetchone()
+        conn.close()
+        if row:
+            return {
+                'id': row['recipie_id'],
+                'title': row['title'],
+                'image': row['image_url'],
+                'instructions': row['instructions'],
+                'ingredients': row['ingredients']
+            }
+        return None
+
+    url = f"https://api.spoonacular.com/recipes/{recipe_id}/information"
+    params = {'apiKey': api_key}
+    try:
+        r = requests.get(url, params=params)
+        data = r.json()
+
+        # ubdate DB with instructions and ingredients if available
+        instructions = data.get('instructions', '')
+        # ingredients: join ingredient names
+        ing_list = [ing['original'] for ing in data.get('extendedIngredients', []) if 'original' in ing]
+        ingredients = '\n'.join(ing_list)
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            UPDATE Recipies SET instructions = ?, ingredients = ?, title = ?, image_url = ?
+            WHERE recipie_id = ?
+        """, (instructions, ingredients, data.get('title', ''), data.get('image', ''), recipe_id))
+        conn.commit()
+        conn.close()
+
+        return {
+            'id': data['id'],
+            'title': data['title'],
+            'image': data['image'],
+            'instructions': instructions,
+            'ingredients': ingredients
+        }
+    except:
+        return None
+    
+# fetc unsplash image based on country name
+def get_country_image(country_name):
+    api_key = app.config['UNSPLASH_API_KEY']
+    if not api_key:
+        # no key
+        return None
+    
+    url = "https://api.unsplash.com/search/photos"
+    params = {
+        'query': country_name,
+        'per_page': 1,
+        'client_id': api_key
+    }
+    try:
+        r = requests.get(url, params=params)
+        data = r.json()
+        if 'results' in data and len(data['results']) > 0:
+            return data['results'][0]['urls']['regular']
+        else:
+            return None
+    except:
+        return None
+    
+# get updvotes/downvotes for each recipe
+def get_recipe_votes(recipe_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT upvotes, downvotes FROM RecipeVotes WHERE recipie_id = ?", (recipe_id,))
+    row = cur.fetchone()
+    conn.close()
+    if row:
+        return row[0], row[1]
+    return (0,0)
+
+def update_recipe_votes(recipe_id, upvote=True):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT upvotes, downvotes FROM RecipeVotes WHERE recipie_id = ?", (recipe_id,))
+    row = cur.fetchone()
+    if row:
+        upvotes = row[0]
+        downvotes = row[1]
+        if upvote:
+            upvotes += 1
+        else:
+            downvotes += 1
+        cur.execute("UPDATE RecipeVotes SET upvotes = ?, downvotes = ? WHERE recipie_id = ?", (upvotes, downvotes, recipe_id))
+    else:
+        # insert if not exist
+        if upvote:
+            cur.execute("INSERT INTO RecipeVotes (recipie_id, upvotes, downvotes) VALUES (?, ?, ?)", (recipe_id, 1, 0))
+        else:
+            cur.execute("INSERT INTO RecipeVotes (recipie_id, upvotes, downvotes) VALUES (?, ?, ?)", (recipe_id, 0, 1))
+    conn.commit()
+    conn.close()
 
 # routes
 @app.route('/') # home page route
@@ -181,38 +350,54 @@ def reauthenticate():
             flash("Invalid username or password.", "danger")
     return render_template('reauthenticate.html')
 
-
-@app.route('/recipes/<int:recipe_id>')
-def user_pages(user_id):
-    if 'user_id' not in session:
-        flash("You must be logged in to view user pages.")
-        return redirect(url_for('login'))
-
-    conn = get_db_connection()
-# need code here
-    conn.close()
-    return render_template('recipes.html', pages=pages)
-
 # countries
 @app.route('/country/<country_name>')
 def country_page(country_name):
-    # decode country from URL
     country_name = urllib.parse.unquote(country_name)
+    recipes = get_country_recipes(country_name)
+    top_two = recipes[:2] # display top two recipes on country page
+    country_image = get_country_image(country_name) # add pngs for countries maybe??
     
     # here we will fetch data for country
     # like: (when db is set up and modesl)
-    # recipes = get_recipes_by_country(country_name)
     # traditions = get_traditions_by_country(country_name)
     # badges = get_badges_by_country(country_name)
     # forums = get_forums_by_country(country_name)
     
     # placeholders for now
-    recipes = []
     traditions = []
     badges = []
     forums = []
     
-    return render_template('country.html', country_name=country_name, recipes=recipes, traditions=traditions, badges=badges, forums=forums)
+    return render_template('country.html', 
+                          country_name=country_name, recipes=top_two, traditions=traditions, badges=badges, forums=forums, country_image=country_image, has_more_recipes=(len(recipes)>2))
+
+# route for viewing all recipes for country
+@app.route('/country/<country_name>/recipes')
+def country_recipes_all(country_name):
+    country_name = urllib.parse.unquote(country_name)
+    recipes = get_country_recipes(country_name)
+    return render_template('country_recipes_all.html', country_name=country_name, recipes=recipes)
+    
+@app.route('/country/<country_name>/recipe/<int:recipe_id>')
+def recipe_page(recipe_id, country_name):
+    country_name = urllib.parse.unquote(country_name)
+    recipe_details = get_recipe_details(recipe_id)
+    if not recipe_details: # cannt find stuff
+        flash("Could not fetch recipe details.", "warning")
+        return redirect(url_for('country_page', country_name=country_name))
+
+    upvotes, downvotes = get_recipe_votes(recipe_id)
+    return render_template('recipe.html', country_name=country_name, recipe=recipe_details,upvotes=upvotes,downvotes=downvotes)
+
+@app.route('/country/<country_name>/recipe/<int:recipe_id>/vote')
+def vote_recipe(country_name, recipe_id):
+    action = request.form.get('action')
+    if action == 'upvote':
+        update_recipe_votes(recipe_id, True) # true for upvote
+    elif action == 'downvote':
+        update_recipe_votes(recipe_id, False) # false for downvote
+    return redirect(url_for('recipe_page', country_name=country_name, recipe_id=recipe_id))
 
 if __name__ == "__main__":
     app.run(debug=True)

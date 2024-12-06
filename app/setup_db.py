@@ -60,6 +60,14 @@ def setup_database():
                 FOREIGN KEY (recipie_id) REFERENCES Recipies(recipie_id)
             )
         ''')
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS CuisineVotes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                country TEXT UNIQUE NOT NULL,
+                upvotes INTEGER DEFAULT 0,
+                downvotes INTEGER DEFAULT 0
+            )
+        ''')
     conn.close()
 
 if __name__ == "__main__":
