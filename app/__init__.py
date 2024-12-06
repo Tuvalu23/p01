@@ -12,7 +12,7 @@ import os, sys
 # adding config.py to search path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from config import Config
 from functools import wraps
 from models import User  # import User model from models.py
@@ -209,26 +209,45 @@ def get_recipe_votes(recipe_id):
         return row[0], row[1]
     return (0,0)
 
-def update_recipe_votes(recipe_id, upvote=True):
+# see what a user votes
+def get_user_vote_for_recipe(user_id, recipe_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT vote FROM UserRecipeVotes WHERE user_id = ? AND recipe_id = ?", (user_id, recipe_id))
+    row = cur.fetchone()
+    conn.close()
+    if row:
+        return row[0] # 1 for upvote, -1 for downvote
+    return 0
+
+def set_user_vote(user_id, recipe_id, vote):
+    # vote = 1 (up), -1 (down), 0 (remove)
+    conn = get_db_connection()
+    cur = conn.cursor()
+    # check if user has a vote
+    cur.execute("SELECT vote FROM UserRecipeVotes WHERE user_id = ? AND recipe_id = ?", (user_id, recipe_id))
+    existing = cur.fetchone()
+    if existing:
+        if vote == 0:
+            cur.execute("DELETE FROM UserRecipeVotes WHERE user_id = ? AND recipe_id = ?", (user_id, recipe_id))
+        else:
+            cur.execute("UPDATE UserRecipeVotes SET vote = ? WHERE user_id = ? AND recipe_id = ?", (vote, user_id, recipe_id))
+    else:
+        if vote != 0:
+            cur.execute("INSERT INTO UserRecipeVotes (user_id, recipe_id, vote) VALUES (?, ?, ?)", (user_id, recipe_id, vote))
+    conn.commit()
+    conn.close()
+
+def update_recipe_votes(recipe_id, upvote_change=0, downvote_change=0):
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT upvotes, downvotes FROM RecipeVotes WHERE recipe_id = ?", (recipe_id,))
     row = cur.fetchone()
     if row:
-        upvotes = row[0]
-        downvotes = row[1]
-        if upvote:
-            upvotes += 1
-        else:
-            downvotes += 1
+        upvotes = row[0] + upvote_change
+        downvotes = row[1] + downvote_change
         cur.execute("UPDATE RecipeVotes SET upvotes = ?, downvotes = ? WHERE recipe_id = ?", (upvotes, downvotes, recipe_id))
-    else:
-        # insert if not exist
-        if upvote:
-            cur.execute("INSERT INTO RecipeVotes (recipe_id, upvotes, downvotes) VALUES (?, ?, ?)", (recipe_id, 1, 0))
-        else:
-            cur.execute("INSERT INTO RecipeVotes (recipe_id, upvotes, downvotes) VALUES (?, ?, ?)", (recipe_id, 0, 1))
-    conn.commit()
+        conn.commit()
     conn.close()
 
 # routes
@@ -395,22 +414,71 @@ def recipe_page(country_name, recipe_id):
         return redirect(url_for('country_page', country_name=country_name))
 
     upvotes, downvotes = get_recipe_votes(recipe_id)
-    return render_template('recipe.html', country_name=country_name, recipe=recipe_details,upvotes=upvotes,downvotes=downvotes)
+    current_vote = None
+    if 'user_id' in session:
+        user_vote = get_user_vote_for_recipe(session['user_id'], recipe_id)
+        if user_vote == 1:
+            current_vote = 'up'
+        elif user_vote == -1:
+            current_vote = 'down'
+    
+    return render_template('recipe.html', country_name=country_name, recipe=recipe_details,upvotes=upvotes,downvotes=downvotes, current_vote=current_vote)
 
 @app.route('/country/<country_name>/recipe/<int:recipe_id>/vote', methods=['POST'])
 def vote_recipe(country_name, recipe_id):
     action = request.form.get('action')
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"error": "User not authenticated"}), 403
+    
+    current_vote = get_user_vote_for_recipe(user_id, recipe_id)
+    # current_vote: 0=no vote, 1=upvoted, -1=downvoted
+        
     if not action:
         return {"error": "No action provided."}, 400
     
     if action == 'upvote':
-        update_recipe_votes(recipe_id, True) # true for upvote
+        # if currently no vote, add an upvote
+        if current_vote == 0:
+            update_recipe_votes(recipe_id, upvote_change=1)
+            set_user_vote(user_id, recipe_id, 1)
+            current_vote = 1
+        # if currently upvote, remove it
+        elif current_vote == 1:
+            update_recipe_votes(recipe_id, upvote_change=-1)
+            set_user_vote(user_id, recipe_id, 0)
+            current_vote = 0
+        # if currently downvote, remove downvote and add upvote
+        elif current_vote == -1:
+            update_recipe_votes(recipe_id, upvote_change=1, downvote_change=-1)
+            set_user_vote(user_id, recipe_id, 1)
+            current_vote = 1
+            
+            
     elif action == 'downvote':
-        update_recipe_votes(recipe_id, False) # false for downvote
+        # if currently no vote, add a downvote
+        if current_vote == 0:
+            update_recipe_votes(recipe_id, downvote_change=1)
+            set_user_vote(user_id, recipe_id, -1)
+            current_vote = -1
+        # if currently downvote, remove it
+        elif current_vote == -1:
+            update_recipe_votes(recipe_id, downvote_change=-1)
+            set_user_vote(user_id, recipe_id, 0)
+            current_vote = 0
+        # if currently upvote, remove upvote and add downvote
+        elif current_vote == 1:
+            update_recipe_votes(recipe_id, upvote_change=-1, downvote_change=1)
+            set_user_vote(user_id, recipe_id, -1)
+            current_vote = -1
     else:
         return {"error": "Invalid action."}, 400
     upvotes, downvotes = get_recipe_votes(recipe_id)  # fetch updated counts
-    return {"upvotes": upvotes, "downvotes": downvotes}, 200
+    return jsonify({
+        "upvotes": upvotes,
+        "downvotes": downvotes,
+        "current_vote": "up" if current_vote == 1 else ("down" if current_vote == -1 else None)
+    }), 200
 
 @app.errorhandler(404)
 def page_not_found(error):

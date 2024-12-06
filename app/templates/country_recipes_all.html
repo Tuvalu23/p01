@@ -18,28 +18,28 @@
             {% if recipe.image %}
             <img src="{{ recipe.image }}" alt="{{ recipe.title }}" class="w-64 h-48 object-cover rounded mb-2">
             {% endif %}
-            <p class="mb-2">Upvotes: {{ recipe.upvotes }} | Downvotes: {{ recipe.downvotes }}</p>
-            <div class="flex items-center space-x-4">
-                <button 
-                    class="vote-button bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    data-recipe-id="{{ recipe.id }}" 
-                    data-country-name="{{ country_name }}" 
-                    data-action="upvote"
-                >
-                    👍 Upvote
-                </button>
-                <span id="upvotes-{{ recipe.id }}" class="font-bold text-blue-500">{{ recipe.upvotes }}</span>
-            
-                <button 
-                    class="vote-button bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    data-recipe-id="{{ recipe.id }}" 
-                    data-country-name="{{ country_name }}" 
-                    data-action="downvote"
-                >
-                    👎 Downvote
-                </button>
-                <span id="downvotes-{{ recipe.id }}" class="font-bold text-blue-500">{{ recipe.downvotes }}</span>
-            </div>
+            <p class="mb-2">Upvotes: <span id="upvotes-{{ recipe.id }}">{{ upvotes }}</span> | Downvotes: <span id="downvotes-{{ recipe.id }}">{{ downvotes }}</span></p>
+    <div class="flex items-center space-x-4">
+        <button 
+            class="vote-button px-4 py-2 rounded hover:bg-blue-600"
+            data-recipe-id="{{ recipe.id }}" 
+            data-country-name="{{ country_name }}" 
+            data-action="upvote"
+            id="upvote-button"
+        >
+            👍 Upvote
+        </button>
+    
+        <button 
+            class="vote-button px-4 py-2 rounded hover:bg-blue-600"
+            data-recipe-id="{{ recipe.id }}" 
+            data-country-name="{{ country_name }}" 
+            data-action="downvote"
+            id="downvote-button"
+        >
+            👎 Downvote
+        </button>
+    </div>
             
         <a href="{{ url_for('recipe_page', country_name=country_name, recipe_id=recipe.id) }}" class="text-blue-500 hover:underline mt-2 block">Read More</a>
         </div>
@@ -49,15 +49,38 @@
     <a href="{{ url_for('country_page', country_name=country_name) }}" class="text-blue-500 hover:underline mt-4 inline-block">Back to {{ country_name }}</a>
 </div>
 <script>
+    const currentVote = "{{ current_vote if current_vote else '' }}";
+
+    function updateButtonStyles(vote) {
+        const upvoteButton = document.getElementById("upvote-button");
+        const downvoteButton = document.getElementById("downvote-button");
+        
+        // reset styles
+        upvoteButton.style.backgroundColor = '';
+        downvoteButton.style.backgroundColor = '';
+        upvoteButton.style.color = '';
+        downvoteButton.style.color = '';
+
+        if (vote === 'up') {
+            upvoteButton.style.backgroundColor = 'green';
+            upvoteButton.style.color = 'white';
+        } else if (vote === 'down') {
+            downvoteButton.style.backgroundColor = 'red';
+            downvoteButton.style.color = 'white';
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
+        updateButtonStyles(currentVote);
+
         document.querySelectorAll(".vote-button").forEach(button => {
             button.addEventListener("click", event => {
                 event.preventDefault();
-    
+
                 const recipeId = button.dataset.recipeId;
                 const countryName = button.dataset.countryName;
                 const action = button.dataset.action;
-    
+
                 fetch(`/country/${countryName}/recipe/${recipeId}/vote`, {
                     method: "POST",
                     headers: {
@@ -73,9 +96,10 @@
                 })
                 .then(data => {
                     if (data.upvotes !== undefined && data.downvotes !== undefined) {
-                        // Update upvotes and downvotes in the UI
                         document.querySelector(`#upvotes-${recipeId}`).innerText = data.upvotes;
                         document.querySelector(`#downvotes-${recipeId}`).innerText = data.downvotes;
+                        
+                        updateButtonStyles(data.current_vote);
                     }
                 })
                 .catch(error => {
@@ -83,7 +107,7 @@
                 });
             });
         });
-    });      
+    });        
     </script>
     
 {% endblock %}

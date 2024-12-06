@@ -71,7 +71,18 @@ def setup_database():
             downvotes INTEGER DEFAULT 0,
             FOREIGN KEY (recipe_id) REFERENCES Recipes(recipe_id)
         )
-''')
+    ''')
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS UserRecipeVotes (
+            user_id INTEGER,
+            recipe_id INTEGER,
+            vote INTEGER,
+            PRIMARY KEY (user_id, recipe_id),
+            FOREIGN KEY (user_id) REFERENCES Users(id),
+            FOREIGN KEY (recipe_id) REFERENCES Recipes(recipe_id)
+        );
+
+    ''')
     conn.close()
 
 if __name__ == "__main__":
