@@ -129,7 +129,7 @@ timN -- 2024-12-06-04:25
 - Worked on models.py (did not push yet because showcasing app today)
     - added additional option for Users to change display name 
 
-tiffanyY -- 2024 - 12 - 5 11:42
+tiffanyY -- 2024 - 12 - 6 11:40
 - Fixed a new login bug (file was moved and code couldn't access database)
 * Limit upvotes/votes to one per account\
 !! Working:
