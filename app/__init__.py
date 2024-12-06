@@ -72,18 +72,18 @@ def login_required(f):
 def ensure_recipe_in_db(recipe):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT recipie_id FROM Recipies WHERE recipie_id = ?", (recipe['id'],))
+    cur.execute("SELECT recipe_id FROM Recipes WHERE recipe_id = ?", (recipe['id'],))
     row = cur.fetchone()
     
     if not row:
         # insert basic info now, instructions can be fetched on recipe detail page if needed
         cur.execute("""
-            INSERT INTO Recipies (recipie_id, title, image_url)
+            INSERT INTO Recipes (recipe_id, title, image_url)
             VALUES (?, ?, ?)
         """, (recipe['id'], recipe['title'], recipe['image']))
         # also create entry in RecipeVotes sql table
         cur.execute("""
-            INSERT INTO RecipeVotes (recipie_id) VALUES (?)
+            INSERT INTO RecipeVotes (recipe_id) VALUES (?)
         """, (recipe['id'],))
         conn.commit()
     conn.close() # clse our beautiful db
@@ -91,13 +91,12 @@ def ensure_recipe_in_db(recipe):
 
 # fetch spoonacular by searching a key ingredient/proxy
 def get_country_recipes(country_name):
+    """Fetch recipes and include vote counts."""
     api_key = app.config['SPOONACULAR_API_KEY']
     if not api_key:
-        # no key
         return []
-    
-    ingredient = COUNTRY_INGREDIENT_MAP.get(country_name, country_name)
-    # if none found, use fall back search
+
+    ingredient = COUNTRY_INGREDIENT_MAP.get(country_name, [country_name])[0]
     url = "https://api.spoonacular.com/recipes/complexSearch"
     params = {
         'query': ingredient,
@@ -107,13 +106,21 @@ def get_country_recipes(country_name):
     try:
         r = requests.get(url, params=params)
         data = r.json()
-        if 'results' in data:
-            # results have keys: id, title, image etc.
-            return data['results']
-        else:
-            return []
-    except:
-        # if fail
+        results = data.get('results', [])
+        recipes = []
+        for recipe in results:
+            ensure_recipe_in_db(recipe)  # ensure recipe exists in DB
+            upvotes, downvotes = get_recipe_votes(recipe['id'])  # fetch vote counts
+            recipes.append({
+                "id": recipe['id'],
+                "title": recipe['title'],
+                "image": recipe.get('image'),
+                "upvotes": upvotes,
+                "downvotes": downvotes
+            })
+        return recipes
+    except Exception as e: # if fail
+        print(f"Error fetching recipes: {e}")  # error
         return []
     
 # detailed recipe info
@@ -124,12 +131,12 @@ def get_recipe_details(recipe_id):
         # fallback: just return from DB if we have it
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM Recipies WHERE recipie_id = ?", (recipe_id,))
+        cur.execute("SELECT * FROM Recipes WHERE recipe_id = ?", (recipe_id,))
         row = cur.fetchone()
         conn.close()
         if row:
             return {
-                'id': row['recipie_id'],
+                'id': row['recipe_id'],
                 'title': row['title'],
                 'image': row['image_url'],
                 'instructions': row['instructions'],
@@ -152,8 +159,8 @@ def get_recipe_details(recipe_id):
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("""
-            UPDATE Recipies SET instructions = ?, ingredients = ?, title = ?, image_url = ?
-            WHERE recipie_id = ?
+            UPDATE Recipes SET instructions = ?, ingredients = ?, title = ?, image_url = ?
+            WHERE recipe_id = ?
         """, (instructions, ingredients, data.get('title', ''), data.get('image', ''), recipe_id))
         conn.commit()
         conn.close()
@@ -195,7 +202,7 @@ def get_country_image(country_name):
 def get_recipe_votes(recipe_id):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT upvotes, downvotes FROM RecipeVotes WHERE recipie_id = ?", (recipe_id,))
+    cur.execute("SELECT upvotes, downvotes FROM RecipeVotes WHERE recipe_id = ?", (recipe_id,))
     row = cur.fetchone()
     conn.close()
     if row:
@@ -205,7 +212,7 @@ def get_recipe_votes(recipe_id):
 def update_recipe_votes(recipe_id, upvote=True):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT upvotes, downvotes FROM RecipeVotes WHERE recipie_id = ?", (recipe_id,))
+    cur.execute("SELECT upvotes, downvotes FROM RecipeVotes WHERE recipe_id = ?", (recipe_id,))
     row = cur.fetchone()
     if row:
         upvotes = row[0]
@@ -214,13 +221,13 @@ def update_recipe_votes(recipe_id, upvote=True):
             upvotes += 1
         else:
             downvotes += 1
-        cur.execute("UPDATE RecipeVotes SET upvotes = ?, downvotes = ? WHERE recipie_id = ?", (upvotes, downvotes, recipe_id))
+        cur.execute("UPDATE RecipeVotes SET upvotes = ?, downvotes = ? WHERE recipe_id = ?", (upvotes, downvotes, recipe_id))
     else:
         # insert if not exist
         if upvote:
-            cur.execute("INSERT INTO RecipeVotes (recipie_id, upvotes, downvotes) VALUES (?, ?, ?)", (recipe_id, 1, 0))
+            cur.execute("INSERT INTO RecipeVotes (recipe_id, upvotes, downvotes) VALUES (?, ?, ?)", (recipe_id, 1, 0))
         else:
-            cur.execute("INSERT INTO RecipeVotes (recipie_id, upvotes, downvotes) VALUES (?, ?, ?)", (recipe_id, 0, 1))
+            cur.execute("INSERT INTO RecipeVotes (recipe_id, upvotes, downvotes) VALUES (?, ?, ?)", (recipe_id, 0, 1))
     conn.commit()
     conn.close()
 
@@ -380,7 +387,7 @@ def country_recipes_all(country_name):
     return render_template('country_recipes_all.html', country_name=country_name, recipes=recipes)
     
 @app.route('/country/<country_name>/recipe/<int:recipe_id>')
-def recipe_page(recipe_id, country_name):
+def recipe_page(country_name, recipe_id):
     country_name = urllib.parse.unquote(country_name)
     recipe_details = get_recipe_details(recipe_id)
     if not recipe_details: # cannt find stuff

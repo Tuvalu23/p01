@@ -19,22 +19,24 @@
     <!-- recipes -->
     <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4">Top Recipes</h2>
-        {% if recipes %}
-            {% for recipe in recipes %}
-                <div class="mb-4">
-                    <h3 class="text-xl font-bold">{{ recipe.title }}</h3>
-                    {% if recipe.image %}
-                    <img src="{{ recipe.image }}" alt="{{ recipe.title }}" class="w-64 mb-2 rounded shadow" />
-                    {% endif %}
-                    <a href="{{ url_for('recipe_page', country_name=country_name, recipe_id=recipe.id) }}" class="text-blue-500 hover:underline">Read More</a>
-                </div>
-            {% endfor %}
-            {% if has_more_recipes %}
-            <a href="{{ url_for('country_recipes_all', country_name=country_name) }}" class="text-blue-500 hover:underline">See All Recipes</a>
+        {% for recipe in recipes %}
+        <div class="mb-4 p-4 border rounded shadow">
+            <h3 class="text-xl font-bold mb-2">{{ recipe.title }}</h3>
+            {% if recipe.image %}
+            <img src="{{ recipe.image }}" alt="{{ recipe.title }}" class="w-64 h-48 object-cover rounded mb-2">
             {% endif %}
-        {% else %}
-            <p>No recipes available for {{ country_name }}.</p>
-        {% endif %}
+            <p class="mb-2">Upvotes: {{ recipe.upvotes }} | Downvotes: {{ recipe.downvotes }}</p>
+            <div class="flex items-center gap-2">
+                <form method="POST" action="{{ url_for('vote_recipe', country_name=country_name, recipe_id=recipe.id) }}">
+                    <button type="submit" name="action" value="upvote" class="px-4 py-2 bg-green-500 text-white rounded">👍</button>
+                </form>
+                <form method="POST" action="{{ url_for('vote_recipe', country_name=country_name, recipe_id=recipe.id) }}">
+                    <button type="submit" name="action" value="downvote" class="px-4 py-2 bg-red-500 text-white rounded">👎</button>
+                </form>
+            </div>
+            <a href="{{ url_for('recipe_page', country_name=country_name, recipe_id=recipe.id) }}" class="text-blue-500 hover:underline mt-2 block">Read More</a>
+        </div>
+        {% endfor %}
     </section>
 
     <!-- traditions  -->

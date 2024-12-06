@@ -62,7 +62,7 @@ $ pip install -r requirements.txt
 ## Launch Codes: [w.i.p]
 1. Run the database setup file
 ``` 
-$ python3 setup_DB.py
+$ python3 app/setup_db.py
 ```
 2. Locate and run the app file
 ``` 
