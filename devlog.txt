@@ -131,6 +131,8 @@ timN -- 2024-12-06-04:25
 
 tiffanyY -- 2024 - 12 - 6 11:40
 - Fixed a new login bug (file was moved and code couldn't access database)
+- Made a todo/working list
+- Updated design doc
 
 benR -- 2024-12-06-17:57
 - Fixed database
