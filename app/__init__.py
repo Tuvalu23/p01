@@ -25,27 +25,27 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 COUNTRY_INGREDIENT_MAP = {
-    "Italy": ["pasta", "tomatoes", "basil", "parmesan"],
-    "France": ["baguette", "cheese", "wine", "herbs de Provence"],
-    "China": ["dumplings", "soy sauce", "ginger", "bok choy"],
-    "Japan": ["miso", "sushi", "wasabi", "soy sauce", "matcha"],
-    "India": ["curry", "cumin", "turmeric", "cardamom", "lentils"],
-    "Mexico": ["adobo", "tortilla", "chili peppers", "avocado", "cilantro"],
-    "Thailand": ["lemongrass", "coconut milk", "chili", "fish sauce"],
-    "Spain": ["paella", "saffron", "chorizo"],
-    "Greece": ["feta", "olives", "lemon"],
-    "USA": ["hamburger", "barbecue sauce", "maple syrup", "corn", "potatoes"],
-    "Brazil": ["feijoada", "cassava", "black beans"],
-    "Vietnam": ["pho", "fish sauce", "rice noodles", "mint"],
-    "Turkey": ["kebab", "eggplant", "sumac", "pomegranate"],
-    "Germany": ["bratwurst", "sauerkraut", "beer", "mustard"],
-    "Morocco": ["couscous", "preserved lemon"],
-    "South Korea": ["kimchi", "gochujang", "sesame oil", "rice"],
-    "Peru": ["ceviche", "potatoes", "aji peppers", "corn", "lime"],
-    "Argentina": ["chimichurri", "malbec wine", "dulce de leche", "empanadas"],
-    "Nigeria": ["jollof rice", "yam", "plantain", "egusi", "pepper soup"],
-    "Ethiopia": ["injera", "berbere spice", "chickpeas", "teff"],
-    "Albania": ["byrek", "feta cheese", "honey"]
+    "Italy": ["pasta", "tomatoes", "basil", "parmesan", "olive oil", "risotto"],
+    "France": ["baguette", "cheese", "wine", "herbs de Provence", "butter", "truffles"],
+    "China": ["dumplings", "soy sauce", "ginger", "bok choy", "Sichuan peppercorn", "hoisin sauce"],
+    "Japan": ["miso", "sushi", "wasabi", "soy sauce", "matcha", "nori", "dashi"],
+    "India": ["curry", "cumin", "turmeric", "cardamom", "lentils", "ghee", "paneer"],
+    "Mexico": ["adobo", "tortilla", "chili peppers", "avocado", "cilantro", "lime", "cacao"],
+    "Thailand": ["lemongrass", "coconut milk", "chili", "fish sauce", "kaffir lime leaves", "galangal"],
+    "Spain": ["paella", "saffron", "chorizo", "manchego cheese", "jamón ibérico", "olive oil"],
+    "Greece": ["feta", "olives", "lemon", "oregano", "yogurt", "honey", "lamb"],
+    "USA": ["hamburger", "barbecue sauce", "maple syrup", "corn", "potatoes", "apple pie"],
+    "Brazil": ["feijoada", "cassava", "black beans", "palm oil", "picanha", "passion fruit"],
+    "Vietnam": ["pho", "fish sauce", "rice noodles", "mint", "lemongrass", "banh mi"],
+    "Turkey": ["kebab", "eggplant", "sumac", "pomegranate", "yogurt", "bulgur"],
+    "Germany": ["bratwurst", "sauerkraut", "beer", "mustard", "pretzels", "potatoes"],
+    "Morocco": ["couscous", "preserved lemon", "harissa", "ras el hanout", "mint", "dates"],
+    "South Korea": ["kimchi", "gochujang", "sesame oil", "rice", "bulgogi", "seaweed"],
+    "Peru": ["ceviche", "potatoes", "aji peppers", "corn", "lime", "quinoa"],
+    "Argentina": ["chimichurri", "malbec wine", "dulce de leche", "empanadas", "asado", "mate"],
+    "Nigeria": ["yam", "plantain", "egusi", "pepper soup", "palm oil", "okra"],
+    "Ethiopia": ["berbere spice", "chickpeas", "teff", "lentils", "doro wat"],
+    "Albania": ["feta cheese", "honey", "olive oil", "grape raki"]
 }
 
 # connect to db
@@ -96,10 +96,11 @@ def get_country_recipes(country_name):
     if not api_key:
         return []
 
-    ingredient = COUNTRY_INGREDIENT_MAP.get(country_name, [country_name])[0]
+    ingredients = COUNTRY_INGREDIENT_MAP.get(country_name, [country_name])
     url = "https://api.spoonacular.com/recipes/complexSearch"
     params = {
-        'query': ingredient,
+        'query': country_name,
+        'includeIngredients': ','.join(ingredients),
         'number': 10,
         'apiKey': api_key
     }
