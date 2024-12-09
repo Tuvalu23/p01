@@ -139,6 +139,9 @@ benR -- 2024-12-06-17:57
 - Formatted ingredients correctly
 - Limited downvotes/upvotes to one per recipe
 
+tiffanyY -- 2024 - 12 - 6 11:40
+- Added pls log in flash messages when trying to vote if not logged in (need to limit the amt of flash messages showing at a time though)
+
 !! Working:
 	- Map -> recipies
 	- Login (and lots of sub features)
