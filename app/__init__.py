@@ -429,6 +429,7 @@ def vote_recipe(country_name, recipe_id):
     action = request.form.get('action')
     user_id = session.get('user_id')
     if not user_id:
+        flash("Please log in to access this page.", "warning")
         return jsonify({"error": "User not authenticated"}), 403
     
     current_vote = get_user_vote_for_recipe(user_id, recipe_id)
