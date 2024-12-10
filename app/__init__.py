@@ -3,7 +3,7 @@ Team Bareustoph: Ben Rudinski, Tiffany Yang, Endrit Idrizi, Tim Ng
 SoftDev
 P01: ArRESTed Development - Global Bites
 2024-11-27
-Time Spent: 2
+Time Spent: 3
 '''
 
 # imports
@@ -48,6 +48,46 @@ COUNTRY_INGREDIENT_MAP = {
     "Albania": ["feta cheese", "honey", "olive oil", "grape raki"]
 }
 
+CUISINE_MAP = {
+    "India": "Indian",
+    "USA": "American",
+    "Italy": "Italian",
+    "France": "French",
+    "China": "Chinese",
+    "Japan": "Japanese",
+    "Mexico": "Mexican",
+    "Thailand": "Thai",
+    "Spain": "Spanish",
+    "Greece": "Greek",
+    "Brazil": "Brazilian",
+    "Vietnam": "Vietnamese",
+    "Turkey": "Turkish",
+    "Germany": "German",
+    "Morocco": "Moroccan",
+    "South Korea": "Korean",
+    "Peru": "Latin American", 
+    "Argentina": "Argentinian",
+    "Nigeria": "African",
+    "Ethiopia": "African",
+    "Albania": "Mediterranean"
+}
+
+# connect to db
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DB_PATH = os.path.join(BASE_DIR, 'thread.db')
+
+def get_db_connection():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            flash("Please log in to access this page.", "warning")
+   
+
 # connect to db
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DB_PATH = os.path.join(BASE_DIR, 'thread.db')
@@ -91,27 +131,38 @@ def ensure_recipe_in_db(recipe):
 
 # fetch spoonacular by searching a key ingredient/proxy
 def get_country_recipes(country_name):
-    """Fetch recipes and include vote counts."""
     api_key = app.config['SPOONACULAR_API_KEY']
     if not api_key:
+        print("Error: SPOONACULAR_API_KEY not found.")
         return []
-
-    ingredients = COUNTRY_INGREDIENT_MAP.get(country_name, [country_name])
+    
+    # map country to cuisine
+    cuisine = CUISINE_MAP.get(country_name, None)
+    if not cuisine:
+        cuisine = country_name  # fallback to country name if mapping not found
+    
     url = "https://api.spoonacular.com/recipes/complexSearch"
     params = {
-        'query': country_name,
-        'includeIngredients': ','.join(ingredients),
+        'cuisine': cuisine,
         'number': 10,
-        'apiKey': api_key
+        'apiKey': api_key,
+        'addRecipeInformation': True,
+        'ranking': 1  # prefer relevance
     }
+    
     try:
-        r = requests.get(url, params=params)
-        data = r.json()
+        response = requests.get(url, params=params)
+        
+        if response.status_code != 200:
+            return []
+        
+        data = response.json()
         results = data.get('results', [])
+        
         recipes = []
         for recipe in results:
-            ensure_recipe_in_db(recipe)  # ensure recipe exists in DB
-            upvotes, downvotes = get_recipe_votes(recipe['id'])  # fetch vote counts
+            ensure_recipe_in_db(recipe)
+            upvotes, downvotes = get_recipe_votes(recipe['id'])
             recipes.append({
                 "id": recipe['id'],
                 "title": recipe['title'],
@@ -119,10 +170,14 @@ def get_country_recipes(country_name):
                 "upvotes": upvotes,
                 "downvotes": downvotes
             })
+        
+        # sort recipes by (upvotes - downvotes) descending
+        recipes.sort(key=lambda r: r['upvotes'] - r['downvotes'], reverse=True)
         return recipes
-    except Exception as e: # if fail
-        print(f"Error fetching recipes: {e}")  # error
+    except Exception as e:
+        print(f"Error fetching recipes: {e}")
         return []
+
     
 # detailed recipe info
 def get_recipe_details(recipe_id):
@@ -304,7 +359,7 @@ def register():
             return redirect(url_for('register'))
 
         if User.get_by_username(username):
-            flash("Username already exists.", 'warning')
+            flash("Username already exists.", 'danger')
             return redirect(url_for('register'))
 
         User.create(username, password)

@@ -142,6 +142,11 @@ benR -- 2024-12-06-17:57
 tiffanyY -- 2024 - 12 - 9 11:40
 - Added pls log in flash messages when trying to vote if not logged in (need to limit the amt of flash messages showing at a time though)
 
+benR -- 2024-12-09 19:23
+- Added cuisine mapping to improve searches for cuisines and sorting
+- Improved ingredients map
+- Recipes now sorted by upvotes ascending
+
 !! Working:
 	- Map -> recipies
 	- Login (and lots of sub features)
@@ -153,5 +158,6 @@ tiffanyY -- 2024 - 12 - 9 11:40
 	- Update design doc
 	- Add a way for users to "disagree"/edit a country/cusine type
 	- Maybe "shopping list" feature
-	- threadzzz
+	- threads
+	- add complete recipe page
 
