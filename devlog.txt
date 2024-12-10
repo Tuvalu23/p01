@@ -161,3 +161,6 @@ benR -- 2024-12-09 19:23
 	- threads
 	- add complete recipe page
 
+timN -- 2024-12-10 04:09
+- Updated recipe retrieval function to search more flexibly 
+- Added more recipes to the list, more pages work now 
