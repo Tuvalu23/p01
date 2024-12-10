@@ -5,71 +5,72 @@ P01: ArRESTed Development - Global Bites
 2024-11-27
 Time Spent: 3
 '''
-
 # imports
 import os, sys
 
-# adding config.py to search path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-from config import Config
-from functools import wraps
-from models import User  # import User model from models.py
 import urllib.parse  # for URL decoding
 import sqlite3
 import requests
+
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from functools import wraps
+from models import User  # import User model from models.py
+
+from config import Config
+
+# adding config.py to search path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # flask app initializing
 app = Flask(__name__)
 app.config.from_object(Config)
 
 COUNTRY_INGREDIENT_MAP = {
-    "Italy": ["San Marzano tomatoes", "buffalo mozzarella", "parmigiano-reggiano", "arborio rice", "pancetta", "basil", "extra virgin olive oil", "balsamic vinegar"],
-    "France": ["truffles", "foie gras", "camembert", "baguette", "dijon mustard", "herbes de Provence", "cognac", "crème fraîche"],
-    "China": ["Sichuan peppercorns", "dried shiitake mushrooms", "Shaoxing wine", "Chinese chives", "dried tangerine peel", "fermented black beans", "star anise", "Pixian doubanjiang"],
-    "Japan": ["kombu", "bonito flakes", "miso paste", "yuzu", "sake", "rice koji", "natto", "shiso leaves", "wakame seaweed"],
-    "India": ["kashmiri red chili", "turmeric", "mustard seeds", "curry leaves", "asafoetida", "ghee", "cardamom", "tamarind", "urad dal"],
-    "Mexico": ["dried ancho chiles", "epazote", "Mexican oregano", "piloncillo", "achiote paste", "nopales", "Mexican chocolate", "masa harina"],
-    "Thailand": ["kaffir lime leaves", "Thai bird's eye chili", "galangal", "palm sugar", "fish sauce", "holy basil", "lemongrass", "shrimp paste"],
-    "Spain": ["saffron", "pimentón", "manchego cheese", "jamón ibérico", "chorizo", "espelette pepper", "marcona almonds", "sherry vinegar"],
-    "Greece": ["feta PDO", "kalamata olives", "oregano", "ouzo", "Greek yogurt", "phyllo pastry", "sumac", "mastiha"],
-    "USA": ["maple syrup", "bourbon", "wild rice", "sourdough starter", "dried cranberries", "pecans", "blue crab", "cornmeal"],
-    "Brazil": ["cassava flour", "dendê oil", "cachaça", "guaraná", "hearts of palm", "pequi fruit", "urucum", "açaí"],
-    "Vietnam": ["fish sauce", "rice paper", "Vietnamese cinnamon", "perilla leaves", "bird's eye chili", "Vietnamese mint", "palm sugar", "rice paddy herb"],
-    "Turkey": ["sumac", "urfa biber", "pomegranate molasses", "bulgur wheat", "tahini", "Turkish pepper", "grape leaves", "nigella seeds"],
-    "Germany": ["speck", "rye flour", "quark", "juniper berries", "caraway seeds", "lebkuchen spices", "German mustard", "white asparagus"],
-    "Morocco": ["preserved lemons", "ras el hanout", "harissa", "argan oil", "dried rose petals", "filo pastry", "baharat spice blend", "orange blossom water"],
-    "South Korea": ["gochugaru", "gochujang", "doenjang", "kimchi", "perilla oil", "Korean pear", "Korean red pepper paste", "gim (seaweed)"],
-    "Peru": ["aji amarillo", "pisco", "quinoa", "purple corn", "lucuma", "huacatay", "coca leaves", "cancha (corn nuts)"],
-    "Argentina": ["yerba mate", "chimichurri spices", "dulce de leche", "Argentine beef", "quince paste", "Argentine wine", "chili pepper", "Argentine oregano"],
-    "Nigeria": ["palm oil", "egusi seeds", "kola nuts", "scotch bonnet peppers", "suya spice", "locust beans", "yam flour", "ogbono seeds"],
-    "Ethiopia": ["berbere spice", "teff flour", "wat spice blend", "injera sourdough", "shiro powder", "mitmita spice", "gesho leaves", "korarima"],
-    "Albania": ["raki", "white cheese", "olive oil", "mountain herbs", "bean paste", "cornmeal", "walnuts", "sage"]
+    "Italy": ["pasta", "tomatoes", "basil", "parmesan", "olive oil", "risotto"],
+    "France": ["baguette", "cheese", "wine", "herbs de Provence", "butter", "truffles"],
+    "China": ["dumplings", "soy sauce", "ginger", "bok choy", "Sichuan peppercorn", "hoisin sauce"],
+    "Japan": ["miso", "sushi", "wasabi", "soy sauce", "matcha", "nori", "dashi"],
+    "India": ["curry", "cumin", "turmeric", "cardamom", "lentils", "ghee", "paneer"],
+    "Mexico": ["adobo", "tortilla", "chili peppers", "avocado", "cilantro", "lime", "cacao"],
+    "Thailand": ["lemongrass", "coconut milk", "chili", "fish sauce", "kaffir lime leaves", "galangal"],
+    "Spain": ["paella", "saffron", "chorizo", "manchego cheese", "jamón ibérico", "olive oil"],
+    "Greece": ["feta", "olives", "lemon", "oregano", "yogurt", "honey", "lamb"],
+    "USA": ["hamburger", "barbecue sauce", "maple syrup", "corn", "potatoes", "apple pie"],
+    "Brazil": ["feijoada", "cassava", "black beans", "palm oil", "picanha", "passion fruit"],
+    "Vietnam": ["pho", "fish sauce", "rice noodles", "mint", "lemongrass", "banh mi"],
+    "Turkey": ["kebab", "eggplant", "sumac", "pomegranate", "yogurt", "bulgur"],
+    "Germany": ["bratwurst", "sauerkraut", "beer", "mustard", "pretzels", "potatoes"],
+    "Morocco": ["couscous", "preserved lemon", "harissa", "ras el hanout", "mint", "dates"],
+    "South Korea": ["kimchi", "gochujang", "sesame oil", "rice", "bulgogi", "seaweed"],
+    "Peru": ["ceviche", "potatoes", "aji peppers", "corn", "lime", "quinoa"],
+    "Argentina": ["chimichurri", "malbec wine", "dulce de leche", "empanadas", "asado", "mate"],
+    "Nigeria": ["yam", "plantain", "egusi", "pepper soup", "palm oil", "okra"],
+    "Ethiopia": ["berbere spice", "chickpeas", "teff", "lentils", "doro wat"],
+    "Albania": ["feta cheese", "honey", "olive oil", "grape raki"]
 }
 
 CUISINE_MAP = {
-    "India": "Indian curry,North Indian,South Indian,Punjabi",
-    "USA": "American,Southern American,Midwest American,BBQ",
-    "Italy": "Tuscan,Sicilian,Northern Italian,Roman,Italian regional",
-    "France": "Provençal,Burgundian,Parisian,French regional cuisine",
-    "China": "Sichuan,Cantonese,Hunan,Beijing,Shanghai,Xinjiang cuisine",
-    "Japan": "Kaiseki,Washoku,Okinawan,Hokkaido regional",
-    "Mexico": "Yucatan,Oaxacan,Pueblan,Mexican regional",
-    "Thailand": "Thai street food,Northeastern Thai,Southern Thai,Bangkok cuisine",
-    "Spain": "Catalan,Basque,Andalusian,Valencian",
-    "Greece": "Cretan,Macedonian,Ionian,Greek island cuisine",
-    "Brazil": "Bahian,Amazonian,Minas Gerais,Gaucho cuisine",
-    "Vietnam": "Northern Vietnamese,Southern Vietnamese,Central Vietnamese",
-    "Turkey": "Ottoman,Anatolian,Mediterranean Turkish,Black Sea cuisine",
-    "Germany": "Bavarian,Swabian,Saxon,Rhineland cuisine",
-    "Morocco": "Berber,Coastal Moroccan,Imperial city cuisine",
-    "South Korea": "Korean BBQ,Jeju Island,Pyongyang-style,Temple cuisine",
-    "Peru": "Andean,Coastal Peruvian,Amazonian Peruvian",
-    "Argentina": "Patagonian,Buenos Aires,Northwest Argentine",
-    "Nigeria": "Yoruba,Igbo,Northern Nigerian,Lagos street food",
-    "Ethiopia": "Amhara,Oromo,Ethiopian Orthodox cuisine",
-    "Albania": "Northern Albanian,Southern Albanian,Coastal Albanian"
+    "India": "Indian",
+    "USA": "American",
+    "Italy": "Italian",
+    "France": "French",
+    "China": "Chinese",
+    "Japan": "Japanese",
+    "Mexico": "Mexican",
+    "Thailand": "Thai",
+    "Spain": "Spanish",
+    "Greece": "Greek",
+    "Brazil": "Brazilian",
+    "Vietnam": "Vietnamese",
+    "Turkey": "Turkish",
+    "Germany": "German",
+    "Morocco": "Moroccan",
+    "South Korea": "Korean",
+    "Peru": "Latin American", 
+    "Argentina": "Argentinian",
+    "Nigeria": "African",
+    "Ethiopia": "African",
+    "Albania": "Mediterranean"
 }
 
 # connect to db
@@ -121,11 +122,10 @@ def get_country_recipes(country_name):
         return []
     
     # map country to cuisine
-    cuisines = CUISINE_MAP.get(country_name, None)
-    if not cuisines:
-        cuisines = country_name  # fallback to country name if mapping not found
+    cuisine = CUISINE_MAP.get(country_name, None)
+    if not cuisine:
+        cuisine = country_name  # fallback to country name if mapping not found
     
-    cuisine = cuisines.split(",")[0] if "," in cuisines else cuisines
     url = "https://api.spoonacular.com/recipes/complexSearch"
     params = {
         'cuisine': cuisine,
