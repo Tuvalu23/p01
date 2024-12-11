@@ -4,7 +4,10 @@ __pycache__/
 *$py.class
 
 # keys and secrets (NOONE CAN SEE)
-app/keys/
+app/keys/key_calenderific.txt
+app/keys/key_googlemaps.txt
+app/keys/spoonacular.txt
+key_unsplash.txt
 
 # environment variables
 .env
