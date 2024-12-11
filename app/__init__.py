@@ -12,8 +12,10 @@ import urllib.parse  # for URL decoding
 import sqlite3
 import requests
 import datetime # for calendarific dates
+import calendar  # for month/calendar operations
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from dateutil.parser import parse  # import for ISO 8601 parsing (for dates)
 from functools import wraps
 from models import User  # import User model from models.py
 
@@ -361,6 +363,58 @@ def get_upcoming_holidays(country_name):
     holidays.sort(key=lambda h: h['date'])
     return holidays
 
+# get all rcipes for current monrth globally (for home calendar)
+def get_holidays_this_month():
+    api_key = app.config.get('CALENDARIFIC_API_KEY')
+    if not api_key:
+        print("Error: Calendarific API key not configured.")
+        return {}, None, None, None
+
+    today = datetime.date.today()
+    current_year = today.year
+    current_month = today.month
+    month_name = calendar.month_name[current_month]
+
+    # find first and last day of the current month
+    first_day = datetime.date(current_year, current_month, 1)
+    _, num_days = calendar.monthrange(current_year, current_month)
+    last_day = datetime.date(current_year, current_month, num_days)
+
+    holidays_by_date = {}
+
+    # loop thru all countries
+    for country_name, country_code in COUNTRY_CODE_MAP.items():
+        url = "https://calendarific.com/api/v2/holidays"
+        params = {
+            "api_key": api_key,
+            "country": country_code,
+            "year": current_year,
+        }
+
+        try:
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()
+
+            # parsin/using params
+            if isinstance(data, dict) and "response" in data and "holidays" in data["response"]:
+                for holiday in data["response"]["holidays"]:
+                    holiday_date = holiday["date"]["iso"]  # ISO 8601 string
+                    try:
+                        d = parse(holiday_date).date()  # use dateutil to parse date
+                        if first_day <= d <= last_day:
+                            name = holiday["name"]
+                            if d.isoformat() not in holidays_by_date:
+                                holidays_by_date[d.isoformat()] = []
+                            holidays_by_date[d.isoformat()].append(f"{name} ({country_name})")
+                    except ValueError as ve:
+                        print(f"Invalid date format for {holiday_date}: {ve}")
+
+        except requests.exceptions.RequestException as e:
+            print(f"Error fetching holidays for {country_name}: {e}")
+
+    return holidays_by_date, current_year, current_month, month_name
+
 # routes
 @app.route('/') # home page route
 def home():
@@ -369,7 +423,11 @@ def home():
         user = User.get_by_id(session['user_id'])
     #maps api key
     google_maps_api_key = app.config['GOOGLE_MAPS_API_KEY']
-    return render_template('home.html', google_maps_api_key=google_maps_api_key)
+    calendarific_api_key = app.config['CALENDARIFIC_API_KEY']
+    
+    holidays_by_date, current_year, current_month, month_name = get_holidays_this_month()
+    
+    return render_template('home.html', google_maps_api_key=google_maps_api_key, holidays_by_date=holidays_by_date, current_year=current_year, current_month=current_month, month_name=month_name)
 
 # login route
 @app.route('/login', methods=['GET', 'POST'])

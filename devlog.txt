@@ -167,3 +167,9 @@ timN -- 2024-12-10 04:09
 
 tiffanyY -- 2024 - 12 - 10 3:20
 - Added flash limit
+
+benR -- 2024-12-11-18:32
+- Changed traditions section to upcoming holidays using calendarific api calls
+- Added top two upcoming holidays to country page and then u can click to see more for country_holidays_all page
+- Add function to get all upcoming holidays for all countries in a month
+- Updated requirements.txt
