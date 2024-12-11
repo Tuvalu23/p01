@@ -531,5 +531,18 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 
+def limited_flash(message, category=""):
+    if "flashed_messages" not in session:
+        session["flashed_messages"] = []
+    if len(session["flashed_messages"]) < 3:
+        session["flashed_messages"].append((message, category))
+    else:
+        session["flashed_messages"].pop(0)
+        session["flashed_messages"].append((message, category))
+    for msg, cat in session["flashed_messages"]:
+        flash(msg, cat)
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)

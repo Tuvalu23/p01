@@ -16,17 +16,18 @@
         <button class="bg-blue-500 border border-gray-400 text-white px-6 rounded-r-lg hover:bg-blue-600 transition">Search</button>
     </div>
     <!-- flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="mb-4">
-          {% for category, message in messages %}
-            <div class="text-sm p-2 mb-2 border rounded text-{{ 'red' if category == 'error' else 'green' }}-700 bg-{{ 'red' if category == 'error' else 'green' }}-100">
-              {{ message }}
-            </div>
-          {% endfor %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for message in messages[:3] %}
+        <div class="flash-message bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 rounded">
+            {{ message }}
         </div>
-      {% endif %}
-    {% endwith %}
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endwith %}
+
     <!-- recipes -->
     <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4">Top Recipes</h2>
