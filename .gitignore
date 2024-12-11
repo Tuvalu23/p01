@@ -7,7 +7,7 @@ __pycache__/
 app/keys/key_calenderific.txt
 app/keys/key_googlemaps.txt
 app/keys/spoonacular.txt
-key_unsplash.txt
+app/keys/key_unsplash.txt
 
 # environment variables
 .env
