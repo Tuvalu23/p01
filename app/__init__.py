@@ -11,6 +11,7 @@ import os, sys
 import urllib.parse  # for URL decoding
 import sqlite3
 import requests
+import datetime # for calendarific dates
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from functools import wraps
@@ -71,6 +72,31 @@ CUISINE_MAP = {
     "Nigeria": "African",
     "Ethiopia": "African",
     "Albania": "Mediterranean"
+}
+
+# map of country names to Calendarific country codes:
+COUNTRY_CODE_MAP = {
+    "Italy": "IT",
+    "France": "FR",
+    "China": "CN",
+    "Japan": "JP",
+    "India": "IN",
+    "Mexico": "MX",
+    "Thailand": "TH",
+    "Spain": "ES",
+    "Greece": "GR",
+    "USA": "US",
+    "Brazil": "BR",
+    "Vietnam": "VN",
+    "Turkey": "TR",
+    "Germany": "DE",
+    "Morocco": "MA",
+    "South Korea": "KR",
+    "Peru": "PE",
+    "Argentina": "AR",
+    "Nigeria": "NG",
+    "Ethiopia": "ET",
+    "Albania": "AL"
 }
 
 # connect to db
@@ -290,6 +316,50 @@ def update_recipe_votes(recipe_id, upvote_change=0, downvote_change=0):
         cur.execute("UPDATE RecipeVotes SET upvotes = ?, downvotes = ? WHERE recipe_id = ?", (upvotes, downvotes, recipe_id))
         conn.commit()
     conn.close()
+    
+# holiday section
+
+def get_upcoming_holidays(country_name):
+    api_key = app.config.get('CALENDARIFIC_API_KEY')
+    if not api_key:
+        # no key
+        return []
+    
+    country_code = COUNTRY_CODE_MAP.get(country_name)
+    # get current date and the next 2 months maybe
+    today = datetime.date.today()
+    current_year = today.year
+    
+    # fetch holidays for current year and next year
+    holidays = []
+    for year in [current_year, current_year+1]:
+        url = "https://calendarific.com/api/v2/holidays"
+        params = {
+            'api_key': api_key,
+            'country': country_code,
+            'year': year
+        }
+        try:
+            response = requests.get(url, params=params)
+            if response.status_code == 200:
+                data = response.json()
+                for hol in data.get('response', {}).get('holidays', []):
+                    # parse date
+                    date_str = hol['date']['iso']
+                    hol_date = datetime.date.fromisoformat(date_str)
+                    # only upcoming holidays
+                    if hol_date >= today:
+                        holidays.append({
+                            'name': hol['name'],
+                            'description': hol.get('description', ''),
+                            'date': hol_date.isoformat()
+                        })
+        except Exception as e:
+            print("Error fetching holidays:", e)
+            
+    # sort holidays by date
+    holidays.sort(key=lambda h: h['date'])
+    return holidays
 
 # routes
 @app.route('/') # home page route
@@ -427,7 +497,11 @@ def country_page(country_name):
     
     # here we will fetch data for country
     # like: (when db is set up and modesl)
-    # traditions = get_traditions_by_country(country_name)
+    
+    # fetch upcoming holidays
+    holidays = get_upcoming_holidays(country_name)
+    top_two_holidays = holidays[:2]
+    
     # badges = get_badges_by_country(country_name)
     # forums = get_forums_by_country(country_name)
     
@@ -437,7 +511,7 @@ def country_page(country_name):
     forums = []
     
     return render_template('country.html', 
-                          country_name=country_name, recipes=top_two, traditions=traditions, badges=badges, forums=forums, country_image=country_image, has_more_recipes=(len(recipes)>2))
+                          country_name=country_name, recipes=top_two, traditions=traditions, badges=badges, forums=forums, country_image=country_image, holidays=top_two_holidays, has_more_recipes=(len(recipes)>2),  has_more_holidays=(len(holidays)>2))
 
 # route for viewing all recipes for country
 @app.route('/country/<country_name>/recipes')
@@ -521,6 +595,24 @@ def vote_recipe(country_name, recipe_id):
         "downvotes": downvotes,
         "current_vote": "up" if current_vote == 1 else ("down" if current_vote == -1 else None)
     }), 200
+    
+# view all holidays for a country
+@app.route('/country/<country_name>/holidays')
+def country_holidays_all(country_name):
+    country_name = urllib.parse.unquote(country_name)
+    holidays = get_upcoming_holidays(country_name)
+    return render_template('country_holidays_all.html', country_name=country_name, holidays=holidays)
+
+# view single holiday
+@app.route('/country/<country_name>/holiday/<int:holiday_index>')
+def holiday_page(country_name, holiday_index):
+    country_name = urllib.parse.unquote(country_name)
+    holidays = get_upcoming_holidays(country_name)
+    if holiday_index < 0 or holiday_index >= len(holidays):
+        flash("Holiday not found.", "warning")
+        return redirect(url_for('country_page', country_name=country_name))
+    holiday = holidays[holiday_index]
+    return render_template('holiday.html', country_name=country_name, holiday=holiday)
 
 @app.errorhandler(404)
 def page_not_found(error):
