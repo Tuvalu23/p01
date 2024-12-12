@@ -18,6 +18,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from dateutil.parser import parse  # import for ISO 8601 parsing (for dates)
 from functools import wraps
 from models import User  # import User model from models.py
+from calendar import monthrange, day_name
 
 from config import Config
 
@@ -427,7 +428,20 @@ def home():
     
     holidays_by_date, current_year, current_month, month_name = get_holidays_this_month()
     
-    return render_template('home.html', google_maps_api_key=google_maps_api_key, holidays_by_date=holidays_by_date, current_year=current_year, current_month=current_month, month_name=month_name)
+    # generate calendar data
+    days_in_month = monthrange(current_year, current_month)[1]  # total days in the month
+    first_day_of_month = monthrange(current_year, current_month)[0]  # day of the week (0 = Monday)
+    
+    return render_template(
+        'home.html',
+        google_maps_api_key=google_maps_api_key,
+        holidays_by_date=holidays_by_date,
+        current_year=current_year,
+        current_month=current_month,
+        month_name=month_name,
+        days_in_month=days_in_month,
+        first_day_of_month=first_day_of_month
+    )
 
 # login route
 @app.route('/login', methods=['GET', 'POST'])

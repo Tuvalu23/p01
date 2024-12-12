@@ -180,3 +180,7 @@ endritI -- 2024-12-12 11:35
 
 benR -- 2024-12-12 11:42
 - Added calendar section to home page, not working atm tho
+
+benR -- 2024-12-12 18:10
+- Fixed calendar by parsing thru home route
+- Added 'seamless' day calculations

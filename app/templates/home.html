@@ -11,30 +11,60 @@
     <!-- google map -->
      <div id="map" class="w-full h-96 rounded-lg shadow-lg mt-20"></div>
      
+     {% set ns = namespace(day_counter=1) %} <!-- namespace to hold counter -->
+
      <!-- calendar -->
      <div class="mt-10">
-         <h2 class="text2xl font-bold text-center">Holidays in {{ month_name}} {{current_year }}</h2>
-         <div class="flex justify-center">
-             <div class="w-4/5 bg-white shadow-md rounded-lg p-6">
-             {% if holidays_by_date %}
-                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                     {% for date, holidays in holidays_by_date.items() %}
-                         <div class="border p-4 rounded shadow-sm.bg-gray-50">
-                             <h3 class="text-lg font-semibold">{{ date }}</h3>
-                             <ul class="list-disc list-inside mt-2">
-                                 {% for holidays in holidays %}
-                                     <li>{{ holiday }}</li>
-                                 {% endfor %}
-                             </ul>
-                         </div>
-                     {% endfor %}
-                 </div>
-             {% else %}
-                 <p class="text=center text-gray-500 mt-4">No holidays found for this month.</p>
-             {% endif %}
-             </div>
-         </div>
-     </div>
+        <h2 class="text-2xl font-bold text-center">Holidays in {{ month_name }} {{ current_year }}</h2>
+        <div class="flex justify-center mt-6">
+            <div class="w-4/5 bg-white shadow-md rounded-lg p-6">
+                {% if holidays_by_date %}
+                    <table class="table-auto border-collapse border border-gray-400 w-full text-sm">
+                        <thead>
+                            <tr class="bg-gray-200 text-center">
+                                <th class="border border-gray-400 px-2 py-1">Monday</th>
+                                <th class="border border-gray-400 px-2 py-1">Tuesday</th>
+                                <th class="border border-gray-400 px-2 py-1">Wednesday</th>
+                                <th class="border border-gray-400 px-2 py-1">Thursday</th>
+                                <th class="border border-gray-400 px-2 py-1">Friday</th>
+                                <th class="border border-gray-400 px-2 py-1">Saturday</th>
+                                <th class="border border-gray-400 px-2 py-1">Sunday</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set ns = namespace(day_counter=1) %}
+                            {% for week in range((days_in_month + first_day_of_month - 1) // 7 + 1) %}
+                                <tr class="text-center">
+                                    {% for day_of_week in range(7) %}
+                                        <td class="border border-gray-400 px-2 py-2 align-top">
+                                            {% if (week == 0 and day_of_week < first_day_of_month) or ns.day_counter > days_in_month %}
+                                                <!-- Empty cell -->
+                                            {% else %}
+                                                <div class="font-bold">{{ ns.day_counter }}</div>
+                                                <ul class="list-disc list-inside text-left mt-1">
+                                                    {% set date_key = "%04d-%02d-%02d" % (current_year, current_month, ns.day_counter) %}
+                                                    {% if date_key in holidays_by_date %}
+                                                        {% for holiday in holidays_by_date[date_key][:5] %}
+                                                            <li class="text-xs">{{ holiday }}</li>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </ul>
+                                                {% set ns.day_counter = ns.day_counter + 1 %}
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="text-center text-gray-500 mt-4">No holidays found for this month.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    
 </div>
 
 <script>
