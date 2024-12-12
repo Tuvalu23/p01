@@ -10,6 +10,31 @@
 
     <!-- google map -->
      <div id="map" class="w-full h-96 rounded-lg shadow-lg mt-20"></div>
+     
+     <!-- calendar -->
+     <div class="mt-10">
+         <h2 class="text2xl font-bold text-center">Holidays in {{ month_name}} {{current_year }}</h2>
+         <div class="flex justify-center">
+             <div class="w-4/5 bg-white shadow-md rounded-lg p-6">
+             {% if holidays_by_date %}
+                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                     {% for date, holidays in holidays_by_date.items() %}
+                         <div class="border p-4 rounded shadow-sm.bg-gray-50">
+                             <h3 class="text-lg font-semibold">{{ date }}</h3>
+                             <ul class="list-disc list-inside mt-2">
+                                 {% for holidays in holidays %}
+                                     <li>{{ holiday }}</li>
+                                 {% endfor %}
+                             </ul>
+                         </div>
+                     {% endfor %}
+                 </div>
+             {% else %}
+                 <p class="text=center text-gray-500 mt-4">No holidays found for this month.</p>
+             {% endif %}
+             </div>
+         </div>
+     </div>
 </div>
 
 <script>
