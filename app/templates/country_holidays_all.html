@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ country_name }} - All Holidays{% endblock %}
+
+{% block content %}
+<div class="mt-8">
+    <h1 class="text-3xl font-bold mb-4 text-center">All Upcoming Holidays in {{ country_name }}</h1>
+
+    <section class="mb-8">
+        {% if holidays %}
+            {% for holiday in holidays %}
+            <div class="mb-4 p-4 border rounded shadow">
+                <h3 class="text-xl font-bold mb-2">{{ holiday.name }}</h3>
+                <p>Date: {{ holiday.date }}</p>
+                {% if holiday.description %}
+                <p>{{ holiday.description[:200] }}{% if holiday.description|length > 200 %}...{% endif %}</p>
+                {% endif %}
+                <a href="{{ url_for('holiday_page', country_name=country_name, holiday_index=loop.index0) }}" class="text-blue-500 hover:underline mt-2 block">Read More</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No upcoming holidays available.</p>
+        {% endif %}
+    </section>
+
+    <a href="{{ url_for('country_page', country_name=country_name) }}" class="text-blue-500 hover:underline mt-4 inline-block">Back to {{ country_name }}</a>
+</div>
+{% endblock %}

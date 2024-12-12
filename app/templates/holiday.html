@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Holiday Details - {{ holiday.name }}{% endblock %}
+
+{% block content %}
+<div class="mt-8">
+    <h1 class="text-3xl font-bold mb-4 text-center">{{ holiday.name }}</h1>
+    <div class="p-4 border rounded shadow max-w-md mx-auto">
+        <p><strong>Date:</strong> {{ holiday.date }}</p>
+        {% if holiday.description %}
+        <p><strong>Description:</strong> {{ holiday.description }}</p>
+        {% else %}
+        <p>No detailed description available.</p>
+        {% endif %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{{ url_for('country_holidays_all', country_name=country_name) }}" class="text-blue-500 hover:underline">Back to All Holidays</a>
+    </div>
+</div>
+{% endblock %}
