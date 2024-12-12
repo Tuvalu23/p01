@@ -177,3 +177,6 @@ benR -- 2024-12-11-18:32
 endritI -- 2024-12-12 11:35
 - Coded all_recipies.html
 - Coded function for all_recipies.html
+
+benR -- 2024-12-12 11:42
+- Added calendar section to home page, not working atm tho
