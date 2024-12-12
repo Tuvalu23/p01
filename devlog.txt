@@ -173,3 +173,7 @@ benR -- 2024-12-11-18:32
 - Added top two upcoming holidays to country page and then u can click to see more for country_holidays_all page
 - Add function to get all upcoming holidays for all countries in a month
 - Updated requirements.txt
+
+endritI -- 2024-12-12 11:35
+- Coded all_recipies.html
+- Coded function for all_recipies.html

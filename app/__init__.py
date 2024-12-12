@@ -672,6 +672,14 @@ def holiday_page(country_name, holiday_index):
     holiday = holidays[holiday_index]
     return render_template('holiday.html', country_name=country_name, holiday=holiday)
 
+@app.route('/recipes')
+def allRecipes():
+    CountryList = ['India', 'USA', 'Italy', 'France', 'China', 'Japan', 'Mexico', 'Thailand', 'Spain', 'Greece', 'Brazil', 'Vietnam', 'Turkey', 'Germany', 'Morocco', 'South Korea', 'Peru', 'Argentina', 'Nigeria', 'Ethopia', 'Albania']
+    AllRecipesList = []
+    for x in CountryList:
+        AllRecipesList = AllRecipesList + (get_country_recipes(x))
+    return render_template('all_recipes.html', recipes = AllRecipesList)
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
