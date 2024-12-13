@@ -59,22 +59,19 @@
     <!-- colors!!!!! -->
     <section>
         <h2 class="text-xl font-semibold mb-4 text-gray-800">Custom Theme</h2>
-        <form id="customThemeForm" class="space-y-4">
-            <div>
-                <div id="colors">
-                    <h3>Background</h3>
-                    <input type="color" name="" id="background-color">
-                    <h3>Text</h3>
-                    <input type="color" name="" id="text-color">
-                    <h3>Accent</h3>
-                    <input type="color" name="" id="accent-color">
-                    </div>
-                    
-            <button type="button" onclick="applyCustomTheme()" 
-                    class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
-                Apply Theme
-            </button>
+        <form>
+            <label for="background-color">Background Color:</label>
+            <input type="color" id="background-color" name="background-color" value="#ffffff">
+            <br>
+            <label for="text-color">Text Color:</label>
+            <input type="color" id="text-color" name="text-color" value="#000000">
+            <br>
+            <label for="accent-color">Accent Color:</label>
+            <input type="color" id="accent-color" name="accent-color" value="#38b1b5">
+            <br>
+            <button type="button" onclick="applyCustomTheme()">Apply Custom Theme</button>
         </form>
+        
     </section>
 
     <div class="mt-6 flex justify-center space-x-4">
@@ -95,18 +92,17 @@
 
 <script>
     function applyCustomTheme() {
+        const backgroundColor = document.getElementById("background-color").value;
+        const textColor = document.getElementById("text-color").value;
+        const accentColor = document.getElementById("accent-color").value;
 
-        backgroundColor.addEventListener("change", function(){
-backgroundBox.style.backgroundColor = backgroundColor.value
-})
-textColor.addEventListener("change", function(){
-textBox.style.backgroundColor = textColor.value
-})
-accentColor.addEventListener("change", function(){
-accentBox.style.backgroundColor = accentColor.value
-})
+        // Apply the custom colors to the document
+        document.documentElement.style.setProperty('--bg-color', backgroundColor);
+        document.documentElement.style.setProperty('--text-color', textColor);
+        document.documentElement.style.setProperty('--accent-color', accentColor);
+
         // Save the custom theme to localStorage
-        const theme = { bgColor, textColor, accentColor };
+        const theme = { bgColor: backgroundColor, textColor: textColor, accentColor: accentColor };
         localStorage.setItem('customTheme', JSON.stringify(theme));
     }
 
@@ -119,6 +115,7 @@ accentBox.style.backgroundColor = accentColor.value
             document.documentElement.style.setProperty('--accent-color', savedTheme.accentColor);
         }
     });
+
 
     function validatePassword() {
         const password = document.getElementById('newPassword').value;
