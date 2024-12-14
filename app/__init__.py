@@ -694,6 +694,43 @@ def allRecipes():
         AllRecipesList = AllRecipesList + (get_country_recipes(x))
     return render_template('all_recipes.html', recipes = AllRecipesList)
 
+@app.route('/holidays')
+def allHolidays():
+    today = datetime.date.today()
+    api_key = app.config.get('CALENDARIFIC_API_KEY')
+    if not api_key:
+        flash("Calendarific API key not configured.", "danger")
+        return render_template('all_holidays.html', holidays=[])
+
+    all_holidays = []
+    for country_name, country_code in COUNTRY_CODE_MAP.items():
+        url = "https://calendarific.com/api/v2/holidays"
+        params = {
+            'api_key': api_key,
+            'country': country_code,
+            'year': today.year
+        }
+        try:
+            response = requests.get(url, params=params)
+            response.raise_for_status()  # checks for HTTP errors
+            data = response.json()
+            for hol in data.get('response', {}).get('holidays', []):
+                hol_date = datetime.date.fromisoformat(hol['date']['iso'])
+                if hol_date >= today:  # only include upcoming holidays
+                    all_holidays.append({
+                        'name': hol['name'],
+                        'country': country_name,
+                        'date': hol_date
+                    })
+        except requests.exceptions.HTTPError as e:
+            print(f"Error fetching holidays for {country_name}: {e}")
+        except Exception as e:
+            print(f"Unexpected error fetching holidays for {country_name}: {e}")
+
+    # sort holidays by date
+    all_holidays.sort(key=lambda h: h['date'])
+    return render_template('all_holidays.html', holidays=all_holidays)
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404

@@ -184,3 +184,6 @@ benR -- 2024-12-12 11:42
 benR -- 2024-12-12 18:10
 - Fixed calendar by parsing thru home route
 - Added 'seamless' day calculations
+
+benR -- 2024-12-13 19:04
+- Added all_recipes routes and html template, sorting all recipes in upcoming order
