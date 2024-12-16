@@ -3,22 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Global Bites{% endblock %}</title>
-    <!-- tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!--css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <!-- Additional Styles -->
+    {% block styles %}
+    <style>
+        /* Base Styles */
+        body {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Navbar and Footer Transitions */
+        .navbar, .footer {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .navbar a, .footer a {
+            transition: color 0.3s;
+        }
+
+        /* Mode Switcher Styles */
+        #modeSwitcherMenu a {
+            color: #000000;
+        }
+
+        #modeSwitcherMenu a:hover {
+            background-color: #f0f0f0;
+        }
+
+        #modeSwitcherBtn {
+            color: #000000;
+        }
+
+        /* Light Mode */
+        body.light-mode {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .navbar.light-mode, .footer.light-mode {
+            background-color: #c6c9cb;
+            color: #000000;
+        }
+
+        .navbar.light-mode a {
+            color: #000000;
+        }
+
+        .navbar.light-mode a:hover {
+            color: #555555;
+        }
+
+        .footer.light-mode a {
+            color: #000000;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .navbar.dark-mode, .footer.dark-mode {
+            background-color: #1f1f1f;
+            color: #ffffff;
+        }
+
+        .navbar.dark-mode a {
+            color: #ffffff;
+        }
+
+        .navbar.dark-mode a:hover {
+            color: #bbbbbb;
+        }
+
+        .footer.dark-mode a {
+            color: #ffffff;
+        }
+
+        body.dark-mode input {
+            color: #191c1c;
+            background-color: #ffffff; /* Match the cyan background */
+            border-color: #000000; /* Optional: accent color for the border */
+        }
+
+        body.dark-mode h2 {
+            color: white;
+        }
+
+        /* Topher Mode */
+        body.topher-mode {
+            background-color: #38b1b5; /* cyan-ish */
+            color: #ffffff; /* white */
+        }
+
+        .navbar.topher-mode, .footer.topher-mode {
+            background-color: #FF5B00; /* teal-ish */
+            color: #ffffff;
+        }
+
+        .navbar.topher-mode a {
+            color: #ffffff;
+        }
+
+        .navbar.topher-mode a:hover {
+            color: #b2dfdb; /* Lighter teal */
+        }
+
+        .footer.topher-mode a {
+            color: #ffffff;
+        }
+
+        body.topher-mode input {
+            color: #1fbcd1;
+            background-color: #ffffff; /* Match the cyan background */
+            border-color: #000000; /* Optional: accent color for the border */
+        }
+
+        /* Custom Mode Styles */
+        body.custom-mode {
+            background-color: var(--bg-color, pink);
+            color: var(--text-color, black);
+        }
+
+        .navbar.custom-mode, .footer.custom-mode {
+            background-color: var(--bg-color, pink);
+            color: var(--text-color, black);
+        }
+
+        .navbar.custom-mode a {
+            color: var(--accent-color, #38b1b5);
+        }
+
+        .navbar.custom-mode a:hover {
+            color: var(--accent-color, #38b1b5);
+        }
+
+        .footer.custom-mode a {
+            color: var(--accent-color, #38b1b5);
+        }
+
+        body.custom-mode input {
+            background-color: var(--bg-color, pink);
+            color: var(--text-color, black);
+            border-color: var(--text-color, black);
+        }
+
+        /* Additional Styles for Validation */
+        .valid {
+            color: green;
+        }
+
+        .invalid {
+            color: red;
+        }
+    </style>
+    {% endblock %}
 </head>
 <body>
-    <!-- navigation bar at top -->
+    <!-- Navigation Bar -->
     <nav class="navbar bg-white shadow">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <a href="{{ url_for('home') }}" class="text-2xl font-bold">Global Bites</a>
             <ul class="flex space-x-6 items-center">
                 <li><a href="#" class="text-gray-600 hover:text-gray-800">Recipes</a></li>
-                <li><a href="{{ url_for('allHolidays')}}" class="text-gray-600 hover:text-gray-800">Holidays</a></li>
+                <li><a href="{{ url_for('allHolidays') }}" class="text-gray-600 hover:text-gray-800">Holidays</a></li>
                 <li><a href="#" class="text-gray-600 hover:text-gray-800">Community Thread</a></li>
                 <li>
-                    <!-- light/dark/topher mode switcher  -->
+                    <!-- Mode Switcher -->
                     <div class="relative">
                         <button id="modeSwitcherBtn" class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition focus:outline-none">
                             Mode
@@ -42,18 +197,130 @@
             </ul>
         </div>
     </nav>
+
+    <!-- Main Content -->
     <div class="container mx-auto mt-6 px-4">
         {% block content %}{% endblock %}
     </div>
 
-    <!-- footer -->
+    <!-- Footer -->
     <footer class="footer bg-white shadow mt-8">
         <div class="container mx-auto px-4 py-6 text-center">
             &copy; 2024 Global Bites. Bringing happiness to users worldwide.
         </div>
     </footer>
 
-    <!-- futur e script if we need will go here -->
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <!-- Scripts -->
+    {% block scripts %}
+    <script>
+        // Function to set the user mode
+        function setMode(mode) {
+            // Remove existing mode classes
+            document.body.classList.remove('light-mode', 'dark-mode', 'topher-mode', 'custom-mode');
+            const navbar = document.querySelector('.navbar');
+            const footer = document.querySelector('.footer');
+            navbar.classList.remove('light-mode', 'dark-mode', 'topher-mode', 'custom-mode');
+            footer.classList.remove('light-mode', 'dark-mode', 'topher-mode', 'custom-mode');
+
+            // Apply new mode
+            if (mode === 'custom') {
+                // Load custom theme if it exists
+                const savedTheme = JSON.parse(localStorage.getItem('customTheme'));
+                if (savedTheme) {
+                    document.documentElement.style.setProperty('--bg-color', savedTheme.bgColor);
+                    document.documentElement.style.setProperty('--text-color', savedTheme.textColor);
+                    document.documentElement.style.setProperty('--accent-color', savedTheme.accentColor);
+                    document.body.classList.add('custom-mode');
+                    navbar.classList.add('custom-mode');
+                    footer.classList.add('custom-mode');
+                } else {
+                    // If no custom theme is saved, default to light mode
+                    setMode('light');
+                    return;
+                }
+            } else {
+                document.body.classList.add(`${mode}-mode`);
+                navbar.classList.add(`${mode}-mode`);
+                footer.classList.add(`${mode}-mode`);
+            }
+
+            // Save the mode to localStorage
+            localStorage.setItem('mode', mode);
+
+            // Highlight the current mode in the dropdown menu
+            const modeLinks = document.querySelectorAll('#modeSwitcherMenu a');
+            modeLinks.forEach(link => link.classList.remove('bg-blue-500', 'text-white')); // Remove highlight
+            const currentModeLink = document.querySelector(`#modeSwitcherMenu a[onclick="setMode('${mode}')"]`);
+            if (currentModeLink) {
+                currentModeLink.classList.add('bg-blue-500', 'text-white'); // Add highlight
+            }
+
+            // Close the mode switcher menu
+            document.getElementById('modeSwitcherMenu').classList.add('hidden');
+        }
+
+        // Function to apply custom theme
+        function applyCustomTheme() {
+            const backgroundColor = document.getElementById("background-color").value;
+            const textColor = document.getElementById("text-color").value;
+            const accentColor = document.getElementById("accent-color").value;
+
+            // Apply the custom colors to the document
+            document.documentElement.style.setProperty('--bg-color', backgroundColor);
+            document.documentElement.style.setProperty('--text-color', textColor);
+            document.documentElement.style.setProperty('--accent-color', accentColor);
+
+            // Add 'custom-mode' class to body, navbar, and footer
+            document.body.classList.add('custom-mode');
+            document.querySelector('.navbar').classList.add('custom-mode');
+            document.querySelector('.footer').classList.add('custom-mode');
+
+            // Save the custom theme to localStorage
+            const theme = { bgColor: backgroundColor, textColor: textColor, accentColor: accentColor };
+            localStorage.setItem('customTheme', JSON.stringify(theme));
+
+            // Save the mode as 'custom' in localStorage
+            localStorage.setItem('mode', 'custom');
+
+            // Highlight the custom mode in the dropdown menu
+            const modeLinks = document.querySelectorAll('#modeSwitcherMenu a');
+            modeLinks.forEach(link => link.classList.remove('bg-blue-500', 'text-white')); // Remove highlight
+            const customModeLink = document.querySelector(`#modeSwitcherMenu a[onclick="setMode('custom')"]`);
+            if (customModeLink) {
+                customModeLink.classList.add('bg-blue-500', 'text-white'); // Add highlight
+            }
+
+            // Close the mode switcher menu
+            document.getElementById('modeSwitcherMenu').classList.add('hidden');
+
+            alert("Custom theme applied successfully!");
+        }
+
+        // Function to load the saved mode on page load
+        function loadMode() {
+            const savedMode = localStorage.getItem('mode') || 'topher'; // 'topher' is default
+            setMode(savedMode);
+        }
+
+        // Event listener to initialize theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMode();
+
+            // Toggle dropdown menu 
+            const modeSwitcherBtn = document.getElementById('modeSwitcherBtn');
+            const modeSwitcherMenu = document.getElementById('modeSwitcherMenu');
+
+            modeSwitcherBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                modeSwitcherMenu.classList.toggle('hidden');
+            });
+
+            // Close the dropdown when clicking outside
+            document.addEventListener('click', function() {
+                modeSwitcherMenu.classList.add('hidden');
+            });
+        });
+    </script>
+    {% endblock %}
 </body>
 </html>
