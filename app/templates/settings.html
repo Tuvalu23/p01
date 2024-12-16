@@ -12,7 +12,6 @@
         .invalid {
             color: red;
         }
-        
     </style>
 
        <!-- flash Messages -->
@@ -59,19 +58,21 @@
     <!-- colors!!!!! -->
     <section>
         <h2 class="text-xl font-semibold mb-4 text-gray-800">Custom Theme</h2>
-        <form>
-            <label for="background-color">Background Color:</label>
-            <input type="color" id="background-color" name="background-color" value="#ffffff">
-            <br>
-            <label for="text-color">Text Color:</label>
-            <input type="color" id="text-color" name="text-color" value="#000000">
-            <br>
-            <label for="accent-color">Accent Color:</label>
-            <input type="color" id="accent-color" name="accent-color" value="#38b1b5">
-            <br>
-            <button type="button" onclick="applyCustomTheme()">Apply Custom Theme</button>
+        <form id="customThemeForm" class="space-y-4">
+            <div>
+                <label for="background-color" class="block text-gray-700 font-medium">Background Color:</label>
+                <input type="color" id="background-color" name="background-color" value="#ffffff" class="mt-1">
+            </div>
+            <div>
+                <label for="text-color" class="block text-gray-700 font-medium">Text Color:</label>
+                <input type="color" id="text-color" name="text-color" value="#000000" class="mt-1">
+            </div>
+            <div>
+                <label for="accent-color" class="block text-gray-700 font-medium">Accent Color:</label>
+                <input type="color" id="accent-color" name="accent-color" value="#38b1b5" class="mt-1">
+            </div>
+            <button type="button" onclick="applyCustomTheme()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Apply Custom Theme</button>
         </form>
-        
     </section>
 
     <div class="mt-6 flex justify-center space-x-4">
@@ -89,7 +90,8 @@
         </a>
     </div>
 </div>
-
+{% endblock %}
+{% block scripts %}
 <script>
     function applyCustomTheme() {
         const backgroundColor = document.getElementById("background-color").value;
@@ -100,6 +102,9 @@
         document.documentElement.style.setProperty('--bg-color', backgroundColor);
         document.documentElement.style.setProperty('--text-color', textColor);
         document.documentElement.style.setProperty('--accent-color', accentColor);
+
+        // Add 'custom-mode' class to body
+        document.body.classList.add('custom-mode');
 
         // Save the custom theme to localStorage
         const theme = { bgColor: backgroundColor, textColor: textColor, accentColor: accentColor };
@@ -113,9 +118,9 @@
             document.documentElement.style.setProperty('--bg-color', savedTheme.bgColor);
             document.documentElement.style.setProperty('--text-color', savedTheme.textColor);
             document.documentElement.style.setProperty('--accent-color', savedTheme.accentColor);
+            document.body.classList.add('custom-mode');
         }
     });
-
 
     function validatePassword() {
         const password = document.getElementById('newPassword').value;

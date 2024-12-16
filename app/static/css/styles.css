@@ -119,35 +119,6 @@ body.topher-mode input {
     background-color: #ffffff; /* Match the cyan background */
     border-color: #000000; /* Optional: accent color for the border */
 }
-/* custom mode */
-body.custom-mode {
-    background-color: var(--bg-color, var(--bg-color, pink));
-    color: var(--accent-color, var(--accent-color, pink));
-}
-
-.navbar.custom-mode, .footer.custom-mode {
-    background-color: var(--bg-color, var(--bg-color, pink));
-    color: var(--accent-color, var(--accent-color, pink));
-}
-
-.navbar.custom-mode a {
-    color: var(--accent-color, var(--accent-color, pink));
-}
-.navbar.custom-mode a:hover {
-    color: var(--accent-color, var(--accent-color, pink));
-}
-
-.footer.custom-mode {
-    color: var(--accent-color, var(--accent-color, pink));
-}
-
-body.custom-mode input {
-    background-color: var(--bg-color, var(--bg-color, pink));
-    color: var(--accent-color, var(--accent-color, pink));
-    border-color: (--text-color, var(--text-color, pink));
-}
-
-
 
 /* for register.html */
 .valid {
@@ -156,4 +127,32 @@ body.custom-mode input {
 
 .invalid {
     color: red;
+}
+
+/* Custom Mode Styles */
+body.custom-mode {
+    background-color: var(--bg-color, pink);
+    color: var(--text-color, black);
+}
+
+.navbar.custom-mode, .footer.custom-mode {
+    background-color: var(--bg-color, pink);
+    color: var(--text-color, black);
+}
+
+.navbar.custom-mode a {
+    color: var(--accent-color, #38b1b5);
+}
+.navbar.custom-mode a:hover {
+    color: var(--accent-color, #38b1b5);
+}
+
+.footer.custom-mode a {
+    color: var(--accent-color, #38b1b5);
+}
+
+body.custom-mode input {
+    background-color: var(--bg-color, pink);
+    color: var(--text-color, black);
+    border-color: var(--text-color, black);
 }
