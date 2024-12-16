@@ -115,6 +115,35 @@ body.topher-mode input {
     background-color: #ffffff; /* Match the cyan background */
     border-color: #000000; /* Optional: accent color for the border */
 }
+/* custom mode */
+body.custom-mode {
+    background-color: var(--bg-color, var(--bg-color, pink));
+    color: var(--accent-color, var(--accent-color, pink));
+}
+
+.navbar.custom-mode, .footer.custom-mode {
+    background-color: var(--bg-color, var(--bg-color, pink));
+    color: var(--accent-color, var(--accent-color, pink));
+}
+
+.navbar.custom-mode a {
+    color: var(--accent-color, var(--accent-color, pink));
+}
+.navbar.custom-mode a:hover {
+    color: var(--accent-color, var(--accent-color, pink));
+}
+
+.footer.custom-mode {
+    color: var(--accent-color, var(--accent-color, pink));
+}
+
+body.custom-mode input {
+    background-color: var(--bg-color, var(--bg-color, pink));
+    color: var(--accent-color, var(--accent-color, pink));
+    border-color: (--text-color, var(--text-color, pink));
+}
+
+
 
 /* for register.html */
 .valid {
