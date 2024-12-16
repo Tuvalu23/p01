@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Upcoming Holidays{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow-lg rounded-lg p-6">
+    <h1 class="text-3xl font-bold mb-4">Upcoming Holidays</h1>
+    {% if holidays %}
+        <ul class="space-y-4">
+            {% for holiday in holidays %}
+                <li class="p-4 bg-gray-50 rounded shadow">
+                    <div class="text-lg font-semibold">{{ holiday.name }}</div>
+                    <div class="text-gray-600">Date: {{ holiday.date }}</div>
+                    <div class="text-gray-600">Country: {{ holiday.country }}</div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-gray-600">No holidays found. Please check your API key or try again later.</p>
+    {% endif %}
+</div>
+{% endblock %}

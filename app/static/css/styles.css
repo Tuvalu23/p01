@@ -87,6 +87,10 @@ body.dark-mode input {
     border-color: #000000; /* Optional: accent color for the border */
 }
 
+body.dark-mode h2{
+  color: white;
+}
+
 /* topher mode */
 body.topher-mode {
     background-color: #38b1b5; /* cyan ish lol tophers favorite color */

@@ -65,19 +65,25 @@
         <a href="{{ url_for('country_recipes_all', country_name=country_name) }}" class="text-blue-500 hover:underline mt-2 block">All Recipes</a>
     </section>
 
-    <!-- traditions  -->
+    <!-- holidays (former tradtions ) -->
     <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">Traditions</h2>
-        {% if traditions %}
-            <!-- show traditions -->
-            {% for tradition in traditions %}
-                <div class="mb-4">
-                    <h3 class="text-xl font-bold">{{ tradition.title }}</h3>
-                    <p>{{ tradition.description }}</p>
+        <h2 class="text-2xl font-semibold mb-4">Upcoming Holidays</h2>
+        {% if holidays %}
+            {% for holiday in holidays %}
+                <div class="mb-4 p-4 border rounded shadow">
+                    <h3 class="text-xl font-bold">{{ holiday.name }}</h3>
+                    <p>Date: {{ holiday.date }}</p>
+                    {% if holiday.description %}
+                    <p>{{ holiday.description[:100] }}{% if holiday.description|length > 100 %}...{% endif %}</p>
+                    {% endif %}
+                    <a href="{{ url_for('holiday_page', country_name=country_name, holiday_index=loop.index0) }}" class="text-blue-500 hover:underline mt-2 block">Read More</a>
                 </div>
             {% endfor %}
         {% else %}
-            <p>No traditions available for {{ country_name }}.</p>
+            <p>No upcoming holidays available for {{ country_name }}.</p>
+        {% endif %}
+        {% if has_more_holidays %}
+        <a href="{{ url_for('country_holidays_all', country_name=country_name) }}" class="text-blue-500 hover:underline mt-2 block">All Holidays</a>
         {% endif %}
     </section>
 
