@@ -167,3 +167,30 @@ timN -- 2024-12-10 04:09
 
 tiffanyY -- 2024 - 12 - 10 3:20
 - Added flash limit
+
+benR -- 2024-12-11-18:32
+- Changed traditions section to upcoming holidays using calendarific api calls
+- Added top two upcoming holidays to country page and then u can click to see more for country_holidays_all page
+- Add function to get all upcoming holidays for all countries in a month
+- Updated requirements.txt
+
+endritI -- 2024-12-12 11:35
+- Coded all_recipies.html
+- Coded function for all_recipies.html
+
+benR -- 2024-12-12 11:42
+- Added calendar section to home page, not working atm tho
+
+benR -- 2024-12-12 18:10
+- Fixed calendar by parsing thru home route
+- Added 'seamless' day calculations
+
+benR -- 2024-12-13 19:04
+- Added all_recipes routes and html template, sorting all recipes in upcoming order
+
+endritI -- 2024-12-16 11:40
+- Fixed text colors and calendar being broken
+
+benR -- 2024-12-16 18:48
+- Fixed custom colored theme and removed useless routes
+

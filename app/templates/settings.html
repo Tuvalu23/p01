@@ -3,10 +3,10 @@
 {% block title %}Profile Settings{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-8 mt-10 border border-gray-300">
-    <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Advanced Settings</h1>
+<div class="max-w-3xl mx-auto shadow-md rounded-lg p-8 mt-10 border border-gray-300">
+    <h1 class="text-2xl font-bold text-center mb-6">Advanced Settings</h1>
 
-    <!-- flash -->
+    <!-- flash  -->
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         <div class="mb-4">
@@ -19,23 +19,23 @@
     {% endif %}
     {% endwith %}
     
-    <!-- pswd Section -->
+    <!-- change psqd -->
     <section class="mb-8">
-        <h2 class="text-xl font-semibold mb-4 text-gray-800">Change Password</h2>
+        <h2 class="text-xl font-semibold mb-4">Change Password</h2>
         <form id="changePasswordForm" method="POST" action="{{ url_for('settings') }}" onsubmit="return validateForm()" class="space-y-4">
             <div>
-                <label for="currentPassword" class="block text-gray-700 font-medium">Current Password</label>
+                <label for="currentPassword" class="block font-medium">Current Password</label>
                 <input type="password" id="currentPassword" name="currentPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" required>
             </div>
             <div>
-                <label for="newPassword" class="block text-gray-700 font-medium">New Password</label>
+                <label for="newPassword" class="block font-medium">New Password</label>
                 <input type="password" id="newPassword" name="newPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" required>
             </div>
             <div>
-                <label for="confirmPassword" class="block text-gray-700 font-medium">Confirm New Password</label>
+                <label for="confirmPassword" class="block font-medium">Confirm New Password</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" required>
             </div>
-            <!-- Password Requirements -->
+            <!-- password requirements -->
             <ul class="password-requirements mt-2 text-sm">
                 <li id="length" data-text="At least 12 characters" class="invalid text-red-600">&#10008; At least 12 characters</li>
                 <li id="lowercase" data-text="At least one lowercase letter" class="invalid text-red-600">&#10008; At least one lowercase letter</li>
@@ -47,27 +47,27 @@
         </form>
     </section>
 
-    <!-- Custom Theme Section -->
+    <!-- custom themes -->
     <section>
-        <h2 class="text-xl font-semibold mb-4 text-gray-800">Custom Theme</h2>
+        <h2 class="text-xl font-semibold mb-4">Custom Theme</h2>
         <form id="customThemeForm" class="space-y-4">
             <div>
-                <label for="background-color" class="block text-gray-700 font-medium">Background Color:</label>
+                <label for="background-color" class="block font-medium">Background Color:</label>
                 <input type="color" id="background-color" name="background-color" value="#ffffff" class="mt-1">
             </div>
             <div>
-                <label for="text-color" class="block text-gray-700 font-medium">Text Color:</label>
+                <label for="text-color" class="block font-medium">Text Color:</label>
                 <input type="color" id="text-color" name="text-color" value="#000000" class="mt-1">
             </div>
             <div>
-                <label for="accent-color" class="block text-gray-700 font-medium">Accent Color:</label>
+                <label for="accent-color" class="block font-medium">Accent Color:</label>
                 <input type="color" id="accent-color" name="accent-color" value="#38b1b5" class="mt-1">
             </div>
             <button type="button" onclick="applyCustomTheme()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Apply Custom Theme</button>
         </form>
     </section>
 
-    <!-- nav Buttons -->
+    <!-- nav  -->
     <div class="mt-6 flex justify-center space-x-4">
         <a href="{{ url_for('profile') }}" 
            class="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition shadow-md">
@@ -86,46 +86,47 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-    // Password Validation Functions
-    function validatePassword() {
-        const password = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        const checks = {
-            length: password.length >= 12,
-            lowercase: /[a-z]/.test(password),
-            uppercase: /[A-Z]/.test(password),
-            number: /[0-9]/.test(password),
-            match: password === confirmPassword && password !== ''
-        };
-
-        for (const [key, value] of Object.entries(checks)) {
-            const element = document.getElementById(key);
-            if (element) {
-                if (value) {
-                    element.classList.remove('invalid');
-                    element.classList.add('valid');
-                    element.innerHTML = '&#10004; ' + element.dataset.text;
-                } else {
-                    element.classList.remove('valid');
-                    element.classList.add('invalid');
-                    element.innerHTML = '&#10008; ' + element.dataset.text;
+    {{ super() }}
+    <script>
+        // Password Validation Functions
+        function validatePassword() {
+            const password = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+    
+            const checks = {
+                length: password.length >= 12,
+                lowercase: /[a-z]/.test(password),
+                uppercase: /[A-Z]/.test(password),
+                number: /[0-9]/.test(password),
+                match: password === confirmPassword && password !== ''
+            };
+    
+            for (const [key, value] of Object.entries(checks)) {
+                const element = document.getElementById(key);
+                if (element) {
+                    if (value) {
+                        element.classList.remove('invalid');
+                        element.classList.add('valid');
+                        element.innerHTML = '&#10004; ' + element.dataset.text;
+                    } else {
+                        element.classList.remove('valid');
+                        element.classList.add('invalid');
+                        element.innerHTML = '&#10008; ' + element.dataset.text;
+                    }
                 }
             }
         }
-    }
-
-    function validateForm() {
-        const passwordValid = document.querySelectorAll('.password-requirements .invalid').length === 0;
-        if (!passwordValid) {
-            alert("Please ensure all password requirements are met.");
+    
+        function validateForm() {
+            const passwordValid = document.querySelectorAll('.password-requirements .invalid').length === 0;
+            if (!passwordValid) {
+                alert("Please ensure all password requirements are met.");
+            }
+            return passwordValid;
         }
-        return passwordValid;
-    }
-
-    // Add event listeners for real-time validation
-    document.getElementById('newPassword').addEventListener('input', validatePassword);
-    document.getElementById('confirmPassword').addEventListener('input', validatePassword);
-</script>
+    
+        // Add event listeners for real-time validation
+        document.getElementById('newPassword').addEventListener('input', validatePassword);
+        document.getElementById('confirmPassword').addEventListener('input', validatePassword);
+    </script>
 {% endblock %}
