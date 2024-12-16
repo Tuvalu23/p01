@@ -431,7 +431,7 @@ def home():
     # generate calendar data
     days_in_month = monthrange(current_year, current_month)[1]  # total days in the month
     first_day_of_month = monthrange(current_year, current_month)[0]  # day of the week (0 = Monday)
-    print(today)
+    
     return render_template(
         'home.html',
         google_maps_api_key=google_maps_api_key,
