@@ -10,11 +10,11 @@
 
     <!-- google map -->
      <div id="map" class="w-full h-96 rounded-lg shadow-lg mt-20"></div>
-     
+
      {% set ns = namespace(day_counter=1) %} <!-- namespace to hold counter -->
 
      <!-- calendar -->
-     <div class="mt-10">
+     <div class="mt-10" style="color:black;">
         <h2 class="text-2xl font-bold text-center">Holidays in {{ month_name }} {{ current_year }}</h2>
         <div class="flex justify-center mt-6">
             <div class="w-4/5 bg-white shadow-md rounded-lg p-6">
@@ -31,7 +31,7 @@
                                 <th class="border border-gray-400 px-2 py-1">Sunday</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody style="color:black !important;">
                             {% set ns = namespace(day_counter=1) %}
                             {% for week in range((days_in_month + first_day_of_month - 1) // 7 + 1) %}
                                 <tr class="text-center">
@@ -63,8 +63,8 @@
             </div>
         </div>
     </div>
-    
-    
+
+
 </div>
 
 <script>

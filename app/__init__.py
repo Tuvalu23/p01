@@ -70,7 +70,7 @@ CUISINE_MAP = {
     "Germany": "German",
     "Morocco": "Moroccan",
     "South Korea": "Korean",
-    "Peru": "Latin American", 
+    "Peru": "Latin American",
     "Argentina": "Latin American",
     "Nigeria": "African",
     "Ethiopia": "African",
@@ -128,7 +128,7 @@ def ensure_recipe_in_db(recipe):
     cur = conn.cursor()
     cur.execute("SELECT recipe_id FROM Recipes WHERE recipe_id = ?", (recipe['id'],))
     row = cur.fetchone()
-    
+
     if not row:
         # insert basic info now, instructions can be fetched on recipe detail page if needed
         cur.execute("""
@@ -141,7 +141,7 @@ def ensure_recipe_in_db(recipe):
         """, (recipe['id'],))
         conn.commit()
     conn.close() # clse our beautiful db
-    
+
 
 # fetch spoonacular by searching a key ingredient/proxy
 def get_country_recipes(country_name):
@@ -149,12 +149,12 @@ def get_country_recipes(country_name):
     if not api_key:
         print("Error: SPOONACULAR_API_KEY not found.")
         return []
-    
+
     # map country to cuisine
     cuisine = CUISINE_MAP.get(country_name, None)
     if not cuisine:
         cuisine = country_name  # fallback to country name if mapping not found
-    
+
     url = "https://api.spoonacular.com/recipes/complexSearch"
     params = {
         'cuisine': cuisine,
@@ -163,16 +163,16 @@ def get_country_recipes(country_name):
         'addRecipeInformation': True,
         'ranking': 1  # prefer relevance
     }
-    
+
     try:
         response = requests.get(url, params=params)
-        
+
         if response.status_code != 200:
             return []
-        
+
         data = response.json()
         results = data.get('results', [])
-        
+
         recipes = []
         for recipe in results:
             ensure_recipe_in_db(recipe)
@@ -184,7 +184,7 @@ def get_country_recipes(country_name):
                 "upvotes": upvotes,
                 "downvotes": downvotes
             })
-        
+
         # sort recipes by (upvotes - downvotes) descending
         recipes.sort(key=lambda r: r['upvotes'] - r['downvotes'], reverse=True)
         return recipes
@@ -192,11 +192,11 @@ def get_country_recipes(country_name):
         print(f"Error fetching recipes: {e}")
         return []
 
-    
+
 # detailed recipe info
 def get_recipe_details(recipe_id):
     api_key = app.config['SPOONACULAR_API_KEY']
-    
+
     if not api_key:
         # fallback: just return from DB if we have it
         conn = get_db_connection()
@@ -244,14 +244,14 @@ def get_recipe_details(recipe_id):
         }
     except:
         return None
-    
+
 # fetc unsplash image based on country name
 def get_country_image(country_name):
     api_key = app.config['UNSPLASH_API_KEY']
     if not api_key:
         # no key
         return None
-    
+
     url = "https://api.unsplash.com/search/photos"
     params = {
         'query': country_name,
@@ -267,7 +267,7 @@ def get_country_image(country_name):
             return None
     except:
         return None
-    
+
 # get updvotes/downvotes for each recipe
 def get_recipe_votes(recipe_id):
     conn = get_db_connection()
@@ -319,7 +319,7 @@ def update_recipe_votes(recipe_id, upvote_change=0, downvote_change=0):
         cur.execute("UPDATE RecipeVotes SET upvotes = ?, downvotes = ? WHERE recipe_id = ?", (upvotes, downvotes, recipe_id))
         conn.commit()
     conn.close()
-    
+
 # holiday section
 
 def get_upcoming_holidays(country_name):
@@ -327,12 +327,12 @@ def get_upcoming_holidays(country_name):
     if not api_key:
         # no key
         return []
-    
+
     country_code = COUNTRY_CODE_MAP.get(country_name)
     # get current date and the next 2 months maybe
     today = datetime.date.today()
     current_year = today.year
-    
+
     # fetch holidays for current year and next year
     holidays = []
     for year in [current_year, current_year+1]:
@@ -359,7 +359,7 @@ def get_upcoming_holidays(country_name):
                         })
         except Exception as e:
             print("Error fetching holidays:", e)
-            
+
     # sort holidays by date
     holidays.sort(key=lambda h: h['date'])
     return holidays
@@ -425,13 +425,13 @@ def home():
     #maps api key
     google_maps_api_key = app.config['GOOGLE_MAPS_API_KEY']
     calendarific_api_key = app.config['CALENDARIFIC_API_KEY']
-    
+
     holidays_by_date, current_year, current_month, month_name = get_holidays_this_month()
-    
+
     # generate calendar data
     days_in_month = monthrange(current_year, current_month)[1]  # total days in the month
     first_day_of_month = monthrange(current_year, current_month)[0]  # day of the week (0 = Monday)
-    
+    print(today)
     return render_template(
         'home.html',
         google_maps_api_key=google_maps_api_key,
@@ -440,7 +440,7 @@ def home():
         current_month=current_month,
         month_name=month_name,
         days_in_month=days_in_month,
-        first_day_of_month=first_day_of_month
+        first_day_of_month=first_day_of_month,
     )
 
 # login route
@@ -515,7 +515,7 @@ def profile():
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     user = User.get_by_id(session['user_id'])
-    
+
     if request.method == 'POST':
         # get form data
         current_password = request.form.get('currentPassword')
@@ -538,7 +538,7 @@ def settings():
             return redirect(url_for('settings'))
 
         # update the password securely
-        user.set_password(new_password) 
+        user.set_password(new_password)
         flash('Your password has been successfully updated.', 'success')
         return redirect(url_for('settings'))
 
@@ -566,23 +566,23 @@ def country_page(country_name):
     recipes = get_country_recipes(country_name)
     top_two = recipes[:2] # display top two recipes on country page
     country_image = get_country_image(country_name) # add pngs for countries maybe??
-    
+
     # here we will fetch data for country
     # like: (when db is set up and modesl)
-    
+
     # fetch upcoming holidays
     holidays = get_upcoming_holidays(country_name)
     top_two_holidays = holidays[:2]
-    
+
     # badges = get_badges_by_country(country_name)
     # forums = get_forums_by_country(country_name)
-    
+
     # placeholders for now
     traditions = []
     badges = []
     forums = []
-    
-    return render_template('country.html', 
+
+    return render_template('country.html',
                           country_name=country_name, recipes=top_two, traditions=traditions, badges=badges, forums=forums, country_image=country_image, holidays=top_two_holidays, has_more_recipes=(len(recipes)>2),  has_more_holidays=(len(holidays)>2))
 
 # route for viewing all recipes for country
@@ -591,7 +591,7 @@ def country_recipes_all(country_name):
     country_name = urllib.parse.unquote(country_name)
     recipes = get_country_recipes(country_name)
     return render_template('country_recipes_all.html', country_name=country_name, recipes=recipes)
-    
+
 @app.route('/country/<country_name>/recipe/<int:recipe_id>')
 def recipe_page(country_name, recipe_id):
     country_name = urllib.parse.unquote(country_name)
@@ -608,7 +608,7 @@ def recipe_page(country_name, recipe_id):
             current_vote = 'up'
         elif user_vote == -1:
             current_vote = 'down'
-    
+
     return render_template('recipe.html', country_name=country_name, recipe=recipe_details,upvotes=upvotes,downvotes=downvotes, current_vote=current_vote)
 
 @app.route('/country/<country_name>/recipe/<int:recipe_id>/vote', methods=['POST'])
@@ -618,13 +618,13 @@ def vote_recipe(country_name, recipe_id):
     if not user_id:
         flash("Please log in to access this page.", "warning")
         return jsonify({"error": "User not authenticated"}), 403
-    
+
     current_vote = get_user_vote_for_recipe(user_id, recipe_id)
     # current_vote: 0=no vote, 1=upvoted, -1=downvoted
-        
+
     if not action:
         return {"error": "No action provided."}, 400
-    
+
     if action == 'upvote':
         # if currently no vote, add an upvote
         if current_vote == 0:
@@ -641,8 +641,8 @@ def vote_recipe(country_name, recipe_id):
             update_recipe_votes(recipe_id, upvote_change=1, downvote_change=-1)
             set_user_vote(user_id, recipe_id, 1)
             current_vote = 1
-            
-            
+
+
     elif action == 'downvote':
         # if currently no vote, add a downvote
         if current_vote == 0:
@@ -667,7 +667,7 @@ def vote_recipe(country_name, recipe_id):
         "downvotes": downvotes,
         "current_vote": "up" if current_vote == 1 else ("down" if current_vote == -1 else None)
     }), 200
-    
+
 # view all holidays for a country
 @app.route('/country/<country_name>/holidays')
 def country_holidays_all(country_name):
