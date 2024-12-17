@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Community Threads{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-4">Community Threads</h1>
+
+<!-- Form to add a new thread -->
+<form method="POST" class="mb-8">
+    <div class="mb-4">
+        <label for="title" class="block font-bold">Title:</label>
+        <input type="text" name="title" id="title" class="border rounded p-2 w-full" required>
+    </div>
+    <div class="mb-4">
+        <label for="content" class="block font-bold">Content:</label>
+        <textarea name="content" id="content" class="border rounded p-2 w-full" rows="5" required></textarea>
+    </div>
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Create Thread</button>
+</form>
+
+<!-- List of Threads -->
+{% for thread in threads %}
+<div class="border-b pb-4 mb-4">
+    <h2 class="text-xl font-bold">{{ thread['title'] }}</h2>
+    <p>{{ thread['content'] }}</p>
+    <p class="text-sm text-gray-500">By {{ thread['author'] }} on {{ thread['created_at'] }}</p>
+</div>
+{% endfor %}
+{% endblock %}

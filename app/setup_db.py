@@ -83,6 +83,15 @@ def setup_database():
         );
 
     ''')
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS Threads (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL,
+            author TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+        ''')
     conn.close()
 
 if __name__ == "__main__":

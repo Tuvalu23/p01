@@ -19,7 +19,6 @@ from dateutil.parser import parse  # import for ISO 8601 parsing (for dates)
 from functools import wraps
 from models import User  # import User model from models.py
 from calendar import monthrange, day_name
-
 from config import Config
 
 # adding config.py to search path
@@ -558,6 +557,26 @@ def reauthenticate():
         else:
             flash("Invalid username or password.", "danger")
     return render_template('reauthenticate.html')
+
+@app.route('/threads', methods=['GET', 'POST'])
+@login_required
+def community_threads():
+    conn = get_db_connection()
+    if request.method == 'POST':
+        title = request.form.get('title')
+        content = request.form.get('content')
+        author = User.get_by_id(session['user_id']).username
+        
+        if title and content:
+            conn.execute("INSERT INTO Threads (title, content, author) VALUES (?, ?, ?)", 
+                         (title, content, author))
+            conn.commit()
+            flash("Thread created successfully!", "success")
+        else:
+            flash("Title and content cannot be empty.", "danger")
+    threads = conn.execute("SELECT * FROM Threads ORDER BY created_at DESC").fetchall()
+    conn.close()
+    return render_template('threads.html', threads=threads)
 
 # countries
 @app.route('/country/<country_name>')

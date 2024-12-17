@@ -8,6 +8,8 @@ Time Spent: 0.5
 
 import os
 
+DB_FILE = os.path.join(os.path.dirname(__file__), "thread.db")
+
 def read_key(keys_dir, file_name):
     key_path = os.path.join(keys_dir, file_name)
     try:
