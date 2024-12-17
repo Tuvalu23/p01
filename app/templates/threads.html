@@ -3,7 +3,7 @@
 {% block content %}
 <h1 class="text-3xl font-bold mb-4">Community Threads</h1>
 
-<!-- Form to add a new thread -->
+<!-- Form to Create a New Thread -->
 <form method="POST" class="mb-8">
     <div class="mb-4">
         <label for="title" class="block font-bold">Title:</label>
@@ -13,6 +13,15 @@
         <label for="content" class="block font-bold">Content:</label>
         <textarea name="content" id="content" class="border rounded p-2 w-full" rows="5" required></textarea>
     </div>
+    <div class="mb-4">
+        <label for="country" class="block font-bold">Tag a Country:</label>
+        <select name="country" id="country" class="border rounded p-2 w-full">
+            <option value="" disabled selected>Choose a country</option>
+            {% for country in countries %}
+                <option value="{{ country }}">{{ country }}</option>
+            {% endfor %}
+        </select>
+    </div>
     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Create Thread</button>
 </form>
 
@@ -21,7 +30,14 @@
 <div class="border-b pb-4 mb-4">
     <h2 class="text-xl font-bold">{{ thread['title'] }}</h2>
     <p>{{ thread['content'] }}</p>
-    <p class="text-sm text-gray-500">By {{ thread['author'] }} on {{ thread['created_at'] }}</p>
+    <p class="text-sm text-gray-500">
+        By {{ thread['author'] }} on {{ thread['created_at'] }}
+        {% if thread['country'] %}
+            | Tagged: <a href="{{ url_for('country_page', country_name=thread['country']) }}" class="text-blue-500 hover:underline">{{ thread['country'] }}</a>
+        {% endif %}
+    </p>
 </div>
+{% else %}
+<p>No threads have been created yet. Be the first to start a discussion!</p>
 {% endfor %}
 {% endblock %}

@@ -81,7 +81,6 @@ def setup_database():
             FOREIGN KEY (user_id) REFERENCES Users(id),
             FOREIGN KEY (recipe_id) REFERENCES Recipes(recipe_id)
         );
-
     ''')
         conn.execute('''
             CREATE TABLE IF NOT EXISTS Threads (
@@ -89,7 +88,10 @@ def setup_database():
             title TEXT NOT NULL,
             content TEXT NOT NULL,
             author TEXT NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            country TEXT DEFAULT NULL,
+            upvotes INTEGER DEFAULT 0,
+            downvotes INTEGER DEFAULT 0
         );
         ''')
     conn.close()

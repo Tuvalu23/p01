@@ -30,19 +30,6 @@
             <p class="text-gray-900">{{ user.join_date }}</p>
         </div>
 
-        <div>
-            <h2 class="font-medium text-lg text-gray-700">Badges:</h2>
-            {% if user.badges %}
-                <ul class="list-disc ml-6 text-gray-900">
-                    {% for badge in user.badges %}
-                        <li>{{ badge }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="text-gray-500">No badges earned yet.</p>
-            {% endif %}
-        </div>
-
     </div>
 
     <div class="mt-6 flex justify-center space-x-4">

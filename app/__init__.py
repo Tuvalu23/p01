@@ -568,8 +568,9 @@ def community_threads():
         author = User.get_by_id(session['user_id']).username
         
         if title and content:
-            conn.execute("INSERT INTO Threads (title, content, author) VALUES (?, ?, ?)", 
-                         (title, content, author))
+            local_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            conn.execute("INSERT INTO Threads (title, content, author) VALUES (?, ?, ?, ?)", 
+                         (title, content, author, local_time))
             conn.commit()
             flash("Thread created successfully!", "success")
         else:
