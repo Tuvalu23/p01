@@ -44,6 +44,12 @@
             color: #000000;
         }
 
+        body.light-mode textarea {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #ccc;            
+        }
+
         .navbar.light-mode, .footer.light-mode {
             background-color: #c6c9cb;
             color: #000000;
@@ -93,7 +99,11 @@
         body.dark-mode h2 {
             color: white;
         }
-
+        body.dark-mode textarea {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #555;
+        }
         /* Topher Mode */
         body.topher-mode {
             background-color: #38b1b5; /* cyan-ish */
@@ -117,14 +127,14 @@
             color: #ffffff;
         }
 
-        body.topher-mode input {
+        body.topher-mode input, .topher-mode textarea {
             color: #1fbcd1;
             background-color: #ffffff; /* Match the cyan background */
             border-color: #000000; /* Optional: accent color for the border */
         }
 
         /* Custom Mode Styles */
-        body.custom-mode {
+        body.custom-mode, .custom-mode textarea {
             background-color: var(--bg-color, pink);
             color: var(--text-color, black);
         }
