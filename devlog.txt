@@ -193,4 +193,5 @@ endritI -- 2024-12-16 11:40
 
 benR -- 2024-12-16 18:48
 - Fixed custom colored theme and removed useless routes
-
+timN -- 2024-12-17 05:57
+- Fixed up everything else I found problems with, added threads 
